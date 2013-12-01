@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<testsuite failures="0" time="0.067" errors="0" skipped="0" tests="2" name="DatabaseTest">
-  <testcase classname="DatabaseTest" name="saveAndLoadUser" time="0.035">
-      </testcase>
-  <testcase classname="DatabaseTest" name="snippetTest" time="0.032">
-      </testcase>
-</testsuite>
