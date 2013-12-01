@@ -1,6 +1,7 @@
 package models;
 
 import graph.GraphModel;
+import graph.RelationshipTypes;
 
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -68,7 +69,7 @@ public class User extends GraphModel {
 	
 	public List<Snippet> getSnippets() {
 		//if (snippets!=null) return snippets;
-		List<Model> relations = getRelations(getId(), getClass(), Snippet.class);
+		List<Model> relations = getRelations(RelationshipTypes.AUTHOR, getId(), getClass(), Snippet.class);
 		
 		snippets = new ArrayList<Snippet>();
 		

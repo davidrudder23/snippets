@@ -12,12 +12,14 @@ import play.db.jpa.Model;
 
 public abstract class GraphModel extends Model {
 	
-	public void addRelationship(GraphModel relatedTo) {
-		addRelationship(relatedTo, null);
+	public void addRelationship(String relationshipType, GraphModel relatedTo) {
+		addRelationship(relationshipType, relatedTo, null);
 	}
-	public void addRelationship(GraphModel relatedTo, HashMap<String, String> attributes) {
+	public void addRelationship(String relationshipType, GraphModel relatedTo, HashMap<String, String> attributes) {
 		save();
 		Relationship relationship = new Relationship();
+		relationship.type = relationshipType;
+		
 		relationship.sourceId = getId();
 		relationship.sourceClass = getClass().getName();
 		
@@ -28,8 +30,8 @@ public abstract class GraphModel extends Model {
 		relationship.save();
 	}
 	
-	public List<Model> getRelations(Long sourceId, Class sourceClass, Class destinationClass) {
-		List<Relationship> relationships = Relationship.find("bySourceIdAndSourceClassAndDestinationClass", sourceId, sourceClass.getName(), destinationClass.getName()).fetch();
+	public List<Model> getRelations(String relationshipType, Long sourceId, Class sourceClass, Class destinationClass) {
+		List<Relationship> relationships = Relationship.find("byTypeAndSourceIdAndSourceClassAndDestinationClass", relationshipType, sourceId, sourceClass.getName(), destinationClass.getName()).fetch();
 		Logger.debug ("Found %s relationships from source to dest", relationships.size());
 		List<Model> relations = new ArrayList<>();
 		
@@ -49,7 +51,7 @@ public abstract class GraphModel extends Model {
 			Logger.warn(e, "Could not load relations with arguments id: %d sourceClass: %s destClass: %s", sourceId, sourceClass, destinationClass);
 		}
 		
-		relationships = Relationship.find("byDestinationIdAndDestinationClassAndSourceClass", sourceId, sourceClass.getName(), destinationClass.getName()).fetch();
+		relationships = Relationship.find("byTypeAndDestinationIdAndDestinationClassAndSourceClass", relationshipType, sourceId, sourceClass.getName(), destinationClass.getName()).fetch();
 		Logger.debug ("Found %s relationships from dest to source", relationships.size());
 		
 		try {

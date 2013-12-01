@@ -17,6 +17,8 @@ import play.db.jpa.Model;
 @Entity
 public class Relationship extends Model {
 	
+	public String type;
+	
 	public String sourceClass;
 	public Long sourceId;
 	

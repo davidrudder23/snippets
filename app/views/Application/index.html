@@ -10,3 +10,14 @@
 	#{/list}
 	</div>
 </div>
+	
+<div class="row">
+	<div class="hero">
+	<form action="@{Application.addSnippet()}" mathod="POST">
+	<h2>Add a New Snippet</h2>
+	<p><label>Name<input type="text" name="name"/></label></p>
+	<p><label>Text<textarea rows="4" cols="20" name="text"></textarea></label></p>
+	<p><button>Submit</button></p>
+	</form>
+	</div>
+</div>

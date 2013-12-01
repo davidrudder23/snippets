@@ -1,8 +1,12 @@
 package jobs;
 
+import graph.RelationshipTypes;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.management.relation.RelationType;
 
 import models.Snippet;
 import models.User;
@@ -14,15 +18,6 @@ import play.jobs.OnApplicationStart;
 public class Bootstrap extends Job {
 
 	public void doJob() {
-		List<User> users = User.findAll();
-		for (User user : users) {
-			user.delete();
-		}
-		List<Snippet> snippets = Snippet.findAll();
-		for (Snippet snippet : snippets) {
-			snippet.delete();
-		}
-
 		User user = User.findByUsername("drig");
 		if (user == null) {
 			Logger.debug("Adding default test user");
@@ -32,6 +27,7 @@ public class Bootstrap extends Job {
 			user.save();
 		}
 
+		List<Snippet> snippets = Snippet.findAll();
 		if (snippets.size() <= 0) {
 			Logger.debug("Adding default test snippet");
 			Snippet snippet = new Snippet();
@@ -42,7 +38,7 @@ public class Bootstrap extends Job {
 			authorAttribs.put("date", new Date().toString());
 			authorAttribs.put("type", "Original Author");
 			
-			snippet.addRelationship(user, authorAttribs);
+			snippet.addRelationship(RelationshipTypes.AUTHOR, user, authorAttribs);
 			snippet.save();
 		}
 	}

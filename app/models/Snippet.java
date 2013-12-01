@@ -1,6 +1,7 @@
 package models;
 
 import graph.GraphModel;
+import graph.RelationshipTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Snippet extends GraphModel {
 	
 	public List<User> getAuthors() {
 		//if (authors !=null) return authors;
-		List<Model> relations = getRelations(getId(), getClass(), Snippet.class);
+		List<Model> relations = getRelations(RelationshipTypes.AUTHOR, getId(), getClass(), Snippet.class);
 		
 		authors = new ArrayList<User>();
 		
