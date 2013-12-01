@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+
+<div class="row">
+	<div class="col-lg-6">
+	#{list items:snippets, as:'snippet'}
+	<h4>${snippet.name}</h4>
+	<p>${snippet.text}</p>
+	#{/list}
+	</div>
+</div>
