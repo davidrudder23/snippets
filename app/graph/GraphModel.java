@@ -30,13 +30,26 @@ public abstract class GraphModel extends Model {
 		relationship.save();
 	}
 	
-	public List<Model> getRelations(String relationshipType, Long sourceId, Class sourceClass, Class destinationClass) {
+	public void removeRelationship(String relationshipType, GraphModel relatedTo) {
+		List<Relationship> relationships = (List<Relationship>)getRelations(relationshipType, relatedTo.getClass());
+		
+		for (Relationship relationship: relationships) {
+			if (relationship.destinationId.equals(relatedTo.getId())) {
+				relationship.delete();
+			}
+		}
+	}
+	
+	public List<?> getRelations(String relationshipType, Class destinationClass) {
+		Long sourceId = getId();
+		Class sourceClass = getClass();
+		Logger.debug ("Getting relationships with arguments id: %d sourceClass: %s destClass: %s", sourceId, sourceClass, destinationClass);
 		List<Relationship> relationships = Relationship.find("byTypeAndSourceIdAndSourceClassAndDestinationClass", relationshipType, sourceId, sourceClass.getName(), destinationClass.getName()).fetch();
-		Logger.debug ("Found %s relationships from source to dest", relationships.size());
+		Logger.debug ("Found %s relationships from source to dest with arguments id: %d sourceClass: %s destClass: %s", relationships.size(), sourceId, sourceClass, destinationClass);
 		List<Model> relations = new ArrayList<>();
 		
 		try {
-			Method findMethod = sourceClass.getMethod("findById", Object.class);
+			Method findMethod = destinationClass.getMethod("findById", Object.class);
 			
 			if (findMethod==null) {
 				Logger.warn("Could not find findById method in JPA Model with arguments id: %d sourceClass: %s destClass: %s", sourceId, sourceClass, destinationClass);
@@ -45,6 +58,7 @@ public abstract class GraphModel extends Model {
 			
 			for (Relationship relationship: relationships) {
 				Model model = (Model)findMethod.invoke(null, relationship.destinationId);
+				Logger.debug ("Found model=%s", model);
 				relations.add(model);
 			}
 		} catch (Exception e) {
@@ -52,8 +66,8 @@ public abstract class GraphModel extends Model {
 		}
 		
 		relationships = Relationship.find("byTypeAndDestinationIdAndDestinationClassAndSourceClass", relationshipType, sourceId, sourceClass.getName(), destinationClass.getName()).fetch();
-		Logger.debug ("Found %s relationships from dest to source", relationships.size());
-		
+		Logger.debug ("Found %s relationships from dest to source with arguments id: %d sourceClass: %s destClass: %s", relationships.size(), sourceId, sourceClass, destinationClass);
+
 		try {
 			Method findMethod = destinationClass.getMethod("findById", Object.class);
 			

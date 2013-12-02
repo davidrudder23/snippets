@@ -31,19 +31,18 @@ public class Snippet extends GraphModel {
 	
 	public List<User> getAuthors() {
 		//if (authors !=null) return authors;
-		List<Model> relations = getRelations(RelationshipTypes.AUTHOR, getId(), getClass(), Snippet.class);
-		
-		authors = new ArrayList<User>();
-		
-		for (Model relation: relations) {
-			if (relation instanceof User) {
-				authors.add((User)relation);
-			}
-		}
+		authors = (List<User>)getRelations(RelationshipTypes.AUTHOR, Snippet.class);
 		
 		return authors;
 	}
 	
+	public List<Tag> getTags() {
+		//if (snippets!=null) return snippets;
+		List<Tag> tags= (List<Tag>)getRelations(RelationshipTypes.TAGGED, Tag.class);
+		
+		return tags;
+	}
+
 	@PostUpdate
 	public void postUpdate() {
 		authors = null;

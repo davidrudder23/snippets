@@ -69,17 +69,16 @@ public class User extends GraphModel {
 	
 	public List<Snippet> getSnippets() {
 		//if (snippets!=null) return snippets;
-		List<Model> relations = getRelations(RelationshipTypes.AUTHOR, getId(), getClass(), Snippet.class);
-		
-		snippets = new ArrayList<Snippet>();
-		
-		for (Model relation: relations) {
-			if (relation instanceof Snippet) {
-				snippets.add((Snippet)relation);
-			}
-		}
+		snippets= (List<Snippet>)getRelations(RelationshipTypes.AUTHOR, Snippet.class);
 		
 		return snippets;
+	}
+	
+	public List<Tag> getTags() {
+		//if (snippets!=null) return snippets;
+		List<Tag> tags= (List<Tag>)getRelations(RelationshipTypes.AUTHOR, Tag.class);
+		
+		return tags;
 	}
 	
 	@PostUpdate

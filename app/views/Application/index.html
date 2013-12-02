@@ -1,12 +1,53 @@
 #{extends 'main.html' /}
-#{set title:'Home' /}
+#{set title:'Snippets' /}
 
+#{set 'moreScripts'}
+<script src="/public/javascripts/typeahead.js"></script>
+
+<script>
+$().ready(function() {
+});
+
+function tagSnippet() {
+	var snippetId =  $('#addTagModal').attr('snippetId');
+	var tagName = $("#addTagInput").val();
+	console.log(tagName);
+	var url = "@{Application.tagSnippetAjaxUpdate()}"+"?tagName="+escape(tagName)+"&snippetId="+snippetId;
+	$.ajax({
+		url: url,
+		success: function(data) {
+			$('#addTagModal').modal('hide');
+			window.location.reload();
+		}
+	});
+}
+
+function showAddTagModal(snippetId) {
+	$('#addTagModal').attr('snippetId', snippetId);
+	$('#addTagModal').modal('show');
+	$('#addTagInput').typeahead({
+		name: 'addTag${System.currentTimeMillis()}',
+		prefetch: '@{Application.getMyTagsAjaxJson()}',
+		limit: 10
+	});
+}
+</script>
+#{/set}
 
 <div class="row">
 	<div class="col-lg-6">
 	#{list items:snippets, as:'snippet'}
 	<h4>${snippet.name}</h4>
 	<p>${snippet.text}</p>
+	<ul class="list-group">
+	<li class="list-group-item">
+	Tags
+	<span class="badge" onclick="showAddTagModal('${snippet.getId()}')">Add Tag</span>
+	#{list items:snippet.getTags(), as:'tag'}
+    <span class="badge">${tag.getName()}</span>
+    #{/list}
+	</li>
+	</ul>
 	#{/list}
 	</div>
 </div>
@@ -21,3 +62,22 @@
 	</form>
 	</div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="addTagModal" snippetId="" tabindex="-1" role="dialog" aria-labelledby="addTagModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add a Tag</h4>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="typeahead" name="addTagInput" id="addTagInput"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="tagSnippet()">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
