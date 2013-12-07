@@ -11,10 +11,39 @@
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.min.css">
 		<link rel="stylesheet" href="//getbootstrap.com/examples/starter-template/starter-template.css">
 		
+		
+		<script>
+		$().ready(function() {
+			var $body = $(document.body);
+			var navHeight = $('.navbar').outerHeight(true) + 10;
+
+
+			$('#sidebar').affix({
+			      offset: {
+			        top: function () {
+			            var offsetTop      = $('#sidebar').offset().top
+			            var sideBarMargin  = parseInt($('#sidebar').children(0).css('margin-top'), 10)
+			            var navOuterHeight = $('#masthead').height()
+
+			            return (this.top = offsetTop - navOuterHeight - sideBarMargin)
+			        },
+			        bottom: function () {
+			            return (this.bottom = $('footer').outerHeight(true))
+			        }
+			      }
+			});
+
+			$body.scrollspy({
+				target: '#leftCol',
+				offset: navHeight
+			});
+			
+			#{get 'moreOnReady' /}
+		});
+		</script>
     </head>
     <body>
-    <div class="container">
-      <div class="header">
+	<div class="header">
 	    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	      <div class="container">
 	        <div class="navbar-header">
@@ -35,9 +64,11 @@
 	        </div><!--/.nav-collapse -->
 	      </div>
 	    </div>
-        #{doLayout /}
-        </div>
-      </div>
+	</div>
+        
+    <div class="container-fluid">
+       #{doLayout /}
+    </div>
             
 	    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.js"></script>

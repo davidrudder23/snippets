@@ -1,4 +1,4 @@
-#{extends 'main.html' /}
+#{extends 'templates/sidebar.html' /}
 #{set title:'Snippets' /}
 
 #{set 'moreScripts'}
@@ -34,8 +34,8 @@ function showAddTagModal(snippetId) {
 </script>
 #{/set}
 
-<div class="row">
-	<div class="col-lg-6">
+	<div class="well">
+	<h2>Snippets</h2>
 	#{list items:snippets, as:'snippet'}
 	<h4>${snippet.name}</h4>
 	<p>${snippet.text}</p>
@@ -44,16 +44,14 @@ function showAddTagModal(snippetId) {
 	Tags
 	<span class="badge" onclick="showAddTagModal('${snippet.getId()}')">Add Tag</span>
 	#{list items:snippet.getTags(), as:'tag'}
-    <span class="badge">${tag.getName()}</span>
+    <span class="badge"><a href="/tag/${tag.name}">${tag.getName()}</a></span>
     #{/list}
 	</li>
 	</ul>
 	#{/list}
 	</div>
-</div>
-	
-<div class="row">
-	<div class="hero">
+
+	<div class="well">
 	<form action="@{Application.addSnippet()}" mathod="POST">
 	<h2>Add a New Snippet</h2>
 	<p><label>Name<input type="text" name="name"/></label></p>
@@ -61,9 +59,27 @@ function showAddTagModal(snippetId) {
 	<p><button>Submit</button></p>
 	</form>
 	</div>
-</div>
 
-<!-- Modal -->
+<!-- Add Tag Modal -->
+<div class="modal fade" id="addTagModal" snippetId="" tabindex="-1" role="dialog" aria-labelledby="addTagModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add a Tag</h4>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="typeahead" name="addTagInput" id="addTagInput"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="tagSnippet()">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Add Snippet Modal -->
 <div class="modal fade" id="addTagModal" snippetId="" tabindex="-1" role="dialog" aria-labelledby="addTagModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

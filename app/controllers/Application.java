@@ -10,17 +10,21 @@ import org.apache.commons.lang.StringUtils;
 
 import models.*;
 
-public class Application extends Controller {
+public class Application extends AbstractController {
 
 	@Before
 	public static void authenticate() {
 		User user = Security.getLoggedInUser();
 		if (user==null) Security.login();
 	}
+
     public static void index() {
-		User user = Security.getLoggedInUser();
-    	List<Snippet> snippets = user.getSnippets();
-        render(user, snippets);
+    	mysnippets();
+    }
+    
+    public static void mysnippets() {
+
+        render();
     }
     
     public static void addSnippet(String name, String text, String snippetType) {
@@ -36,7 +40,7 @@ public class Application extends Controller {
     	}
     	
     	snippet.save();
-    	index();
+    	mysnippets();
     }
 
     public static void removeTagAjaxUpdate(Long tagId, Long snippetId) {
