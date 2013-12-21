@@ -2,15 +2,21 @@
 
 <div class="row-fluid">
 	<div class="span3" id="leftCol">
-		<div class="well sidebar-nav">
-			<ul class="nav nav-stacked affix-top" id="sidebar">
-			#{list items:tagNames, as:'tagName'}
-				<li>${tagName}</li>
-			#{/list}
-			</ul>
+		<div class="sidebar">
+			<div class="well sidebar-well">
+				<input type="checkbox" id="tag_${tagName}" />Show all snippets
 			</div>
-		</div>  
-	<div class="span9">
+			<div class="well">
+				<h2>Tags</h2>
+				<ul class="nav nav-stacked affix-top" id="sidebar">
+				#{list items:tagNames, as:'tagName'}
+					<li><input type="checkbox" id="tag_${tagName}" />${tagName}</li>
+				#{/list}
+				</ul>
+			</div>
+		</div>
+	</div>  
+	<div class="content">
 	#{doLayout /}
 	</div>
 </div>

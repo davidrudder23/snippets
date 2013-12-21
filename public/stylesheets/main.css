@@ -1,96 +1,23 @@
-body {
-	padding-top:50px;
-}
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+ }
+ 
+ .container-fluid {
+ max-width: 1024px;
+ margin: auto;
+ }
+ 
+ .sidebar {
+ float: left;
+ display: block;
+ width: 20%;
+ padding: 10px 10px 0px 0px;
+ }
+ 
+ .content {
+ float: left;
+ display: block;
+ width: 80%;
+ padding: 10px 0px 0px 0px;
 
-#masthead {
-	min-height:270px;
-	background-color:#000044;
-  	color:#aaaacc;
-}
-
-#masthead h1 {
-	font-size: 55px;
-	line-height: 1;
-}
-
-#masthead .well {
-	margin-top:13%;
-	background-color:#111155;
-  	border-color:#000033;
-}
-
-.icon-bar {
-	background-color:#fff;
-}
-
-@media screen and (min-width: 768px) {
-	#masthead h1 {
-		font-size: 100px;
-	}
-}
-
-.navbar-bright {
-	background-color:#111155;
-    color:#fff;
-}
-  
-.navbar-bright a, #masthead a, #masthead .lead {
-  	color:#aaaacc;
-}
-
-.navbar-bright li > a:hover {
-    background-color:#000033;
-}
-
-
-.affix-top,.affix{
-	position: static;
-}
-
-#sidebar {
-	background-color:#eee;
-}
-
-#sidebar li.active {
-  	border:0 #ddd solid;
-  	border-right-width:4px;
-}
-
-@media screen and (min-width: 992px) {
-  
-  #sidebar .nav > .active > ul {
-    display: block;
-  }
-  /* Widen the fixed sidebar */
-  #sidebar.affix-top {
-    position: static;
-  	margin-top:30px;
-  	width:228px;
-  }
-  
-  #sidebar.affix,
-  #sidebar.affix-bottom {
-    width: 228px;
-  }
-  #sidebar.affix {
-    position: fixed;
-    top: 220px;
-  }
-  #sidebar.affix-bottom {
-    position: absolute;
-  }
-}
-@media screen and (min-width: 1200px) {
-  #sidebar.affix-bottom,
-  #sidebar.affix {
-    width: 235px;
-  }
-}
-
-footer {
-    padding-top: 40px;
-    padding-bottom: 30px;
-    margin-top: 100px;
-    color: #777;
-    border-top: 1px solid #e5e5e5;
-}
+ }

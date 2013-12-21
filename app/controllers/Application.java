@@ -4,7 +4,11 @@ import play.*;
 import play.mvc.*;
 import graph.RelationshipTypes;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
+
+import jsnlog.JSNLog;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -119,4 +123,25 @@ public class Application extends AbstractController {
     	
     	renderText("Snippet tagged \"%s\"", tag.name);
     }
+    
+	public static void jsnLog() {
+		try {
+			InputStream postBody = Http.Request.current().body;
+			
+			StringBuffer json = new StringBuffer();
+			
+			byte[] inputBuffer = new byte[1024];
+			int size = 0;
+			while ((size = postBody.read(inputBuffer, 0, inputBuffer.length)) > 0) {
+				json.append(new String(inputBuffer, 0, size));
+			}
+			
+			JSNLog.getPlayFramework1_xLogger().log(json.toString());
+			
+			renderText("{status: \"success\"}");
+		} catch (IOException e) {
+			Logger.warn(e, "Could not log JSNLog message");
+			renderText("{status: \"failed\", message:\"%s\"}", e.getMessage());
+		}
+	}
 }
