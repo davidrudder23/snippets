@@ -27,8 +27,111 @@ public class Application extends AbstractController {
     }
     
     public static void mysnippets() {
+		User user = Security.getLoggedInUser();
 
-        render();
+    	render();
+    }
+    
+    public static void getMySnippetAjaxHtml(Long snippetId) {
+		User user = Security.getLoggedInUser();
+    	Snippet snippet = null;
+    	if (snippetId != null) {
+    		snippet = Snippet.findById(snippetId);
+    	}
+    	
+    	if (snippet != null) {
+        	render(snippet);
+    		
+    	}
+
+    	List<Snippet> mySnippets = user.getSnippets();
+    	
+    	if ((mySnippets != null) && (mySnippets.size()>0)) {
+    		snippet = mySnippets.get(0);
+    		render(snippet);
+    	}
+
+		renderText("Add a snippet");
+    }
+    
+    public static void getMySnippetAjaxJson(Long snippetId) {
+		User user = Security.getLoggedInUser();
+    	Snippet snippet = null;
+    	if (snippetId != null) {
+    		snippet = Snippet.findById(snippetId);
+    	}
+    	
+    	if (snippet != null) {
+    		snippet.tags = snippet.getTags();
+    		snippet.tags = snippet.getTags();
+        	renderJSON(snippet);
+    		
+    	}
+
+    	List<Snippet> mySnippets = user.getSnippets();
+    	
+    	if ((mySnippets != null) && (mySnippets.size()>0)) {
+    		snippet = mySnippets.get(0);
+    		snippet.tags = snippet.getTags();
+    		renderJSON(snippet);
+    	}
+
+		renderText("Add a snippet");
+    }
+    
+    public static void getMySnippetNextAjaxJson(Long snippetId) {
+		User user = Security.getLoggedInUser();
+    	Snippet snippet = null;
+    	if (snippetId == null) {
+        	getMySnippetAjaxJson(null);
+    	}
+    	List<Snippet> mySnippets = user.getSnippets();
+    	
+    	if ((mySnippets == null) || (mySnippets.size()<=1)) {
+        	getMySnippetAjaxJson(null);
+    	}
+
+    	boolean foundIt = false;
+    	for (Snippet mySnippet: mySnippets) {
+    		if (mySnippet.id.equals(snippetId)) {
+    			foundIt = true;
+    		} else if (foundIt) {
+    			snippet = mySnippet;
+        		snippet.tags = snippet.getTags();
+    			renderJSON(snippet);
+    		}
+    	}
+    	
+    	if (foundIt) {
+			snippet = mySnippets.get(0);
+    		snippet.tags = snippet.getTags();
+			renderJSON(snippet);
+    	}
+    	getMySnippetAjaxJson(null);
+    }
+    
+    public static void getMySnippetPrevAjaxJson(Long snippetId) {
+		User user = Security.getLoggedInUser();
+    	Snippet snippet = null;
+    	if (snippetId == null) {
+        	getMySnippetAjaxJson(null);
+    	}
+    	List<Snippet> mySnippets = user.getSnippets();
+    	
+    	if ((mySnippets == null) || (mySnippets.size()<=1)) {
+        	getMySnippetAjaxJson(null);
+    	}
+
+    	snippet = mySnippets.get(mySnippets.size()-1);
+    	
+    	for (Snippet mySnippet: mySnippets) {
+    		if (mySnippet.id.equals(snippetId)) {
+        		snippet.tags = snippet.getTags();
+    			renderJSON(snippet);
+    		}
+    		snippet = mySnippet;
+    	}
+    	getMySnippetAjaxJson(null);
     }
     
     public static void addSnippet(String name, String text, String snippetType) {

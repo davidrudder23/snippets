@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.PostLoad;
 import javax.persistence.PostUpdate;
 import javax.persistence.Transient;
 
@@ -23,6 +24,8 @@ public class Snippet extends GraphModel {
 	
 	@Transient
 	private List<User> authors = null;
+	
+	@Transient public List<Tag> tags;
 
 	public static List<Snippet> findByName(String name) {
 		List<Snippet> snippets = Snippet.find("byName", name).fetch();
@@ -42,10 +45,11 @@ public class Snippet extends GraphModel {
 		
 		return tags;
 	}
-
+	
 	@PostUpdate
 	public void postUpdate() {
 		authors = null;
 	}
 	
+
 }

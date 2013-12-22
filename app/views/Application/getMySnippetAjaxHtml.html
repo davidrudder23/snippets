@@ -1,0 +1,12 @@
+
+<h2>Snippets</h2>
+<h4>${snippet.name}</h4>
+<p>${snippet.text}</p>
+<ul class="list-group">
+	<li class="list-group-item">Tags 
+		<span class="badge" onclick="showAddTagModal('${snippet.getId()}')">Add Tag</span> 
+		#{list items:snippet.getTags(), as:'tag'} 
+			<span class="badge"><a href="/tag/${tag.name}">${tag.getName()}</a></span> 
+		#{/list}
+	</li>
+</ul>

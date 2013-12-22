@@ -3,6 +3,16 @@
 <div class="row-fluid">
 	<div class="span3" id="leftCol">
 		<div class="sidebar">
+		
+			<div class="well">
+				<form action="@{Application.addSnippet()}" mathod="POST">
+				<h4>Add a New Snippet</h4>
+				<p><label>Name<input type="text" size="12"name="name"/></label></p>
+				<p><label>Text<textarea rows="4" cols="17" name="text"></textarea></label></p>
+				<p><button>Submit</button></p>
+				</form>
+			</div>
+		
 			<div class="well sidebar-well">
 				<input type="checkbox" id="tag_${tagName}" />Show all snippets
 			</div>

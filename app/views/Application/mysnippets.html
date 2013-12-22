@@ -22,7 +22,8 @@ function tagSnippet() {
 	});
 }
 
-function showAddTagModal(snippetId) {
+function showAddTagModal() {
+	var snippetId = $("#snippet-id").attr("snippet-id");
 	$('#addTagModal').attr('snippetId', snippetId);
 	$('#addTagModal').modal('show');
 	$('#addTagInput').typeahead({
@@ -31,33 +32,83 @@ function showAddTagModal(snippetId) {
 		limit: 10
 	});
 }
+
+function displaySnippetData(data) {
+	var snippet = eval(data);
+	$("#snippet-id").attr("snippet-id", snippet.id);
+	$("#snippet-name").html(snippet.name);
+	$("#snippet-text").html(snippet.text);
+	
+	$("#snippet-tags").html("");
+	for (var tagNum = 0; tagNum < snippet.tags.length; tagNum++) {
+		var tag = snippet.tags[tagNum];
+		var html = "<span class=\"badge\"><a href=\"/tag/"+tag.name+"\">"+tag.name+"</a></span>";
+		console.log(html);
+		$("#snippet-tags").append(html);
+	}
+}
+
+function getSnippet() {
+	$.ajax({
+		url: "@{getMySnippetAjaxJson()}",
+		success: function(data) {
+			displaySnippetData(data);
+		}
+	});
+}
+
+function getNextSnippet() {
+	var snippetId = $("#snippet-id").attr("snippet-id");
+	var action = #{jsAction @getMySnippetNextAjaxJson(':snippetId') /};
+	$.ajax({
+		url:action({snippetId: snippetId}),
+		success: function(data) {
+			displaySnippetData(data);
+		}
+	});
+}
+
+function getPrevSnippet() {
+	var snippetId = $("#snippet-id").attr("snippet-id");
+	var action = #{jsAction @getMySnippetPrevAjaxJson(':snippetId') /};
+	$.ajax({
+		url:action({snippetId: snippetId}),
+		success: function(data) {
+			displaySnippetData(data);
+		}
+	});
+}
 </script>
 #{/set}
 
-	<div class="well">
-	<h2>Snippets</h2>
-	#{list items:snippets, as:'snippet'}
-	<h4>${snippet.name}</h4>
-	<p>${snippet.text}</p>
-	<ul class="list-group">
-	<li class="list-group-item">
-	Tags
-	<span class="badge" onclick="showAddTagModal('${snippet.getId()}')">Add Tag</span>
-	#{list items:snippet.getTags(), as:'tag'}
-    <span class="badge"><a href="/tag/${tag.name}">${tag.getName()}</a></span>
-    #{/list}
-	</li>
-	</ul>
-	#{/list}
+#{set 'moreOnReady'}
+
+	$("#add-tag-button").click(function() {
+		showAddTagModal($("#add-tag-button").attr('snippet-id'));
+	});
+	
+	getSnippet();
+#{/set}
+
+	<div class="well" style="display: block; float: left">
+
+	<div class="prev-arrow" onclick="getPrevSnippet()">&lt;</div>
+
+	<div class="snippet" id="snippet">
+		<h3 id="snippet-name"></h3>
+		<p id="snippet-text"></p>
+		<span style="display: none" id="snippet-id" snippet-id=""></span>
+		<ul class="list-group">
+			<li class="list-group-item">
+				<span class="snippet-tags-label">Tags</span> 
+				<span id="snippet-tags" style="float: right"></span> 
+				<span class="badge" style="float: right" onclick="showAddTagModal()">Add Tag</span> 
+			</li>
+		</ul>
 	</div>
 
-	<div class="well">
-	<form action="@{Application.addSnippet()}" mathod="POST">
-	<h2>Add a New Snippet</h2>
-	<p><label>Name<input type="text" name="name"/></label></p>
-	<p><label>Text<textarea rows="4" cols="20" name="text"></textarea></label></p>
-	<p><button>Submit</button></p>
-	</form>
+	<div class="next-arrow" onclick="getNextSnippet()">&gt;</div>
+
 	</div>
 
 <!-- Add Tag Modal -->

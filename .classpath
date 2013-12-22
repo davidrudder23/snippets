@@ -2,11 +2,10 @@
 <classpath>
 	<classpathentry excluding="views/**" kind="src" path="app"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="neo4j-1.0.2"/>
 	<classpathentry kind="src" path="orientdb-0.1.1"/>
-	
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/drig/play-1.2.5/framework/play-1.2.5.jar" sourcepath="/home/drig/play-1.2.5/framework/src" />
+	<classpathentry kind="lib" path="/home/drig/play-1.2.5/framework/play-1.2.5.jar" sourcepath="/home/drig/play-1.2.5/framework/src"/>
+	<classpathentry kind="lib" path="/home/drig/workspace/snippets/lib/jsnlog.jar"/>
 	<classpathentry kind="lib" path="/home/drig/play-1.2.5/framework/lib/org.eclipse.jdt.core-3.7.1.v_B76_R37x.jar"/>
 	<classpathentry kind="lib" path="/home/drig/play-1.2.5/framework/lib/mail-1.4.3.jar"/>
 	<classpathentry kind="lib" path="/home/drig/play-1.2.5/framework/lib/slf4j-log4j12-1.6.1.jar"/>
@@ -74,6 +73,5 @@
 	<classpathentry kind="lib" path="/home/drig/play-1.2.5/framework/lib/snakeyaml-1.7.jar"/>
 	<classpathentry kind="lib" path="/home/drig/play-1.2.5/framework/lib/commons-collections-3.1.jar"/>
 	<classpathentry kind="lib" path="/home/drig/play-1.2.5/framework/lib/antlr-2.7.7.jar"/>
-	
 	<classpathentry kind="output" path="eclipse/classes"/>
 </classpath>

@@ -1,23 +1,51 @@
-*, *:before, *:after {
-  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
- }
- 
- .container-fluid {
- max-width: 1024px;
- margin: auto;
- }
- 
- .sidebar {
- float: left;
- display: block;
- width: 20%;
- padding: 10px 10px 0px 0px;
- }
- 
- .content {
- float: left;
- display: block;
- width: 80%;
- padding: 10px 0px 0px 0px;
+*,*:before,*:after {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
 
- }
+.container-fluid {
+	max-width: 1024px;
+	margin: auto;
+}
+
+.well {
+	display: block;
+	float: left
+}
+
+.sidebar {
+	float: left;
+	display: block;
+	width: 20%;
+	padding: 10px 10px 0px 0px;
+}
+
+.content {
+	float: left;
+	display: block;
+	width: 80%;
+	padding: 10px 0px 0px 0px;
+}
+
+.next-arrow {
+	float: left;
+	height: 100%;
+	position: relative;
+	top: 100px;
+	padding-left: 10px;
+}
+
+.prev-arrow {
+	float: left;
+	display: block;
+	position: relative;
+	top: 100px;
+	padding-right: 10px;
+}
+
+.snippet {
+ 	width: 80%;
+ 	display: block; 
+ 	float: left;	
+}
