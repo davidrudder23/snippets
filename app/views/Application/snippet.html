@@ -11,7 +11,6 @@ $().ready(function() {
 function tagSnippet() {
 	var snippetId =  $('#addTagModal').attr('snippetId');
 	var tagName = $("#addTagInput").val();
-	console.log(tagName);
 	var url = "@{Application.tagSnippetAjaxUpdate()}"+"?tagName="+escape(tagName)+"&snippetId="+snippetId;
 	$.ajax({
 		url: url,
@@ -38,13 +37,12 @@ function getRelatedSnippet(snippetId) {
 	$.ajax({
 		url:action({snippetId: snippetId}),
 		success: function(snippet) {
-			console.log(snippet);
 			var snippetId = snippet.id;
-			console.log("id="+snippetId);
-			console.log("name="+snippet.name);
+			var relatedAction = #{jsAction @snippet(':snippetName') /};
+			var relatedUrl = action({snippetId: snippetId});
 			
 			var html = "<div class=\"related-snippet\" id=\"related-snippet-"+snippetId+"\">"+
-				"<h3 id=\"snippet-name\">"+snippet.name+"</h3>"+
+				"<h3 id=\"snippet-name\"><a href=\"@{snippet()}?snippetName="+snippet.name+"\">"+snippet.name+"</a></h3>"+
 				"<p id=\"snippet-text\">"+snippet.text+"</p>"+
 			"</div>"
 			$("#related-snippet-"+snippetId).html(html);
@@ -53,68 +51,35 @@ function getRelatedSnippet(snippetId) {
 	
 }
 
-function displaySnippetData(data) {
-	var snippet = eval(data);
-	$("#related-snippet-id").val(snippet.id);
-	$("#snippet-id").attr("snippet-id", snippet.id);
-	$("#snippet-name").html(snippet.name);
-	$("#snippet-text").html(snippet.text);
-
-	// display tags	
-	$("#snippet-tags").html("");
-	for (var tagNum = 0; tagNum < snippet.tags.length; tagNum++) {
-		var tag = snippet.tags[tagNum];
-		var html = "<span class=\"badge\"><a href=\"/tag/"+tag.name+"\">"+tag.name+"</a></span>";
-		$("#snippet-tags").append(html);
-	}
-	
-	// display related snippets
-	$("#snippet-related-snippets").html("");
-	// first print out all the div containers. this will maintain the order, so reloading doesn't shuffle
-	for (var relatedSnippetNum = 0; relatedSnippetNum < snippet.relatedSnippetIds.length; relatedSnippetNum++) {
-		var relatedSnippetId = snippet.relatedSnippetIds[relatedSnippetNum];
+function getRelatedSnippets() {
+	// first load this snippet
+	var snippetId = $("#snippet-id").attr("snippet-id");
+	var action = #{jsAction @getMySnippetAjaxJson(':snippetId') /};
+	$.ajax({
+		url:action({snippetId: snippetId}),
+		success: function(data) {
+			var snippet = eval(data);
 		
-		var html = "<div class=\"related-snippet well\" style=\"display: block; position: relative; width: 100%; margin: 10px auto\" id=\"related-snippet-"+relatedSnippetId+"\"></div>";
-		console.log(html);
-		$("#snippet-related-snippets").append(html);
-	}
-	// now load the actual snippet over ajax
-	for (var relatedSnippetNum = 0; relatedSnippetNum < snippet.relatedSnippetIds.length; relatedSnippetNum++) {
-		var relatedSnippetId = snippet.relatedSnippetIds[relatedSnippetNum];
-		getRelatedSnippet(relatedSnippetId);
-	}
-}
-
-function getSnippet() {
-	$.ajax({
-		url: "@{getMySnippetAjaxJson()}",
-		success: function(data) {
-			displaySnippetData(data);
+			// display related snippets
+			$("#snippet-related-snippets").html("");
+			// first print out all the div containers. this will maintain the order, so reloading doesn't shuffle
+			var listSize = snippet.relatedSnippetIds.length;
+			if (listSize>20) listSize = 20;
+			for (var relatedSnippetNum = 0; relatedSnippetNum < listSize; relatedSnippetNum++) {
+				var relatedSnippetId = snippet.relatedSnippetIds[relatedSnippetNum];
+				
+				var html = "<div class=\"related-snippet well\" style=\"display: block; position: relative; width: 100%; margin: 10px auto\" id=\"related-snippet-"+relatedSnippetId+"\"></div>";
+				$("#snippet-related-snippets").append(html);
+			}
+			// now load the actual snippet over ajax
+			for (var relatedSnippetNum = 0; relatedSnippetNum < listSize; relatedSnippetNum++) {
+				var relatedSnippetId = snippet.relatedSnippetIds[relatedSnippetNum];
+				getRelatedSnippet(relatedSnippetId);
+			}
 		}
 	});
 }
 
-function getNextSnippet() {
-	var snippetId = $("#snippet-id").attr("snippet-id");
-	var action = #{jsAction @getMySnippetNextAjaxJson(':snippetId') /};
-	$.ajax({
-		url:action({snippetId: snippetId}),
-		success: function(data) {
-			displaySnippetData(data);
-		}
-	});
-}
-
-function getPrevSnippet() {
-	var snippetId = $("#snippet-id").attr("snippet-id");
-	var action = #{jsAction @getMySnippetPrevAjaxJson(':snippetId') /};
-	$.ajax({
-		url:action({snippetId: snippetId}),
-		success: function(data) {
-			displaySnippetData(data);
-		}
-	});
-}
 </script>
 #{/set}
 
@@ -124,27 +89,29 @@ function getPrevSnippet() {
 		showAddTagModal($("#add-tag-button").attr('snippet-id'));
 	});
 	
-	getSnippet();
+	getRelatedSnippets();
 #{/set}
 
 	<div class="well" style="width: 800px">
 
-		<div class="prev-arrow" onclick="getPrevSnippet()">&lt;</div>
+		<div class="prev-arrow"><a href="@{getPrevSnippet(snippet?.name)}">&lt;</a></div>
 	
 			<div class="snippet" id="snippet">
-				<h3 id="snippet-name"></h3>
-				<p id="snippet-text"></p>
-				<span style="display: none" id="snippet-id" snippet-id=""></span>
+				<h3 id="snippet-name">${snippet.name}</h3>
+				<p id="snippet-text">${snippet.text}</p>
+				<span style="display: none" id="snippet-id" snippet-id="${snippet?.id}"></span>
 				<ul class="list-group">
 					<li class="list-group-item">
 						<span class="snippet-tags-label">Tags</span> 
-						<span id="snippet-tags" style="float: right"></span> 
+						#{list items:snippet.getTags(), as:'tag'} 
+							<span class="badge"><a href="/tag/${tag.name}">${tag.getName()}</a></span> 
+						#{/list}
 						<span class="badge" style="float: right" onclick="showAddTagModal()">Add Tag</span> 
 					</li>
 				</ul>
 			</div>
 	
-		<div class="next-arrow" onclick="getNextSnippet()">&gt;</div>
+		<div class="next-arrow"><a href="@{getNextSnippet(snippet?.name)}">&gt;</a></div>
 
 	</div>
 
