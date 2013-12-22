@@ -6,4 +6,5 @@ public abstract class RelationshipTypes  {
 	public static String FRIEND="friend";
 	public static String SNIPPET_TYPE="snippetType";
 	public static String TAGGED="tagged";
+	public static String RELATED_SNIPPET="relatedSnippet";
 }

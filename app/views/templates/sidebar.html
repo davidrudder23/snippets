@@ -7,6 +7,7 @@
 			<div class="well">
 				<form action="@{Application.addSnippet()}" mathod="POST">
 				<h4>Add a New Snippet</h4>
+				<input type="hidden" name="relatedSnippetId" id="related-snippet-id" value="">
 				<p><label>Name<input type="text" size="12"name="name"/></label></p>
 				<p><label>Text<textarea rows="4" cols="17" name="text"></textarea></label></p>
 				<p><button>Submit</button></p>

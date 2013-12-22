@@ -6,11 +6,19 @@ import graph.RelationshipTypes;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.*;
 
 import jsnlog.JSNLog;
 
 import org.apache.commons.lang.StringUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import models.*;
 
@@ -62,18 +70,14 @@ public class Application extends AbstractController {
     	}
     	
     	if (snippet != null) {
-    		snippet.tags = snippet.getTags();
-    		snippet.tags = snippet.getTags();
-        	renderJSON(snippet);
-    		
+			renderJSON(snippet, snippet.getJsonSerializer());
     	}
 
     	List<Snippet> mySnippets = user.getSnippets();
     	
     	if ((mySnippets != null) && (mySnippets.size()>0)) {
     		snippet = mySnippets.get(0);
-    		snippet.tags = snippet.getTags();
-    		renderJSON(snippet);
+			renderJSON(snippet, snippet.getJsonSerializer());
     	}
 
 		renderText("Add a snippet");
@@ -97,15 +101,13 @@ public class Application extends AbstractController {
     			foundIt = true;
     		} else if (foundIt) {
     			snippet = mySnippet;
-        		snippet.tags = snippet.getTags();
-    			renderJSON(snippet);
+    			renderJSON(snippet, snippet.getJsonSerializer());
     		}
     	}
     	
     	if (foundIt) {
 			snippet = mySnippets.get(0);
-    		snippet.tags = snippet.getTags();
-			renderJSON(snippet);
+			renderJSON(snippet, snippet.getJsonSerializer());
     	}
     	getMySnippetAjaxJson(null);
     }
@@ -126,15 +128,14 @@ public class Application extends AbstractController {
     	
     	for (Snippet mySnippet: mySnippets) {
     		if (mySnippet.id.equals(snippetId)) {
-        		snippet.tags = snippet.getTags();
-    			renderJSON(snippet);
+    			renderJSON(snippet, snippet.getJsonSerializer());
     		}
     		snippet = mySnippet;
     	}
     	getMySnippetAjaxJson(null);
     }
     
-    public static void addSnippet(String name, String text, String snippetType) {
+    public static void addSnippet(String name, String text, String snippetType, Long relatedSnippetId) {
 		User user = Security.getLoggedInUser();
     	Snippet snippet = new Snippet();
     	snippet.name = name;
@@ -147,6 +148,14 @@ public class Application extends AbstractController {
     	}
     	
     	snippet.save();
+
+    	Snippet relatedSnippet = null;
+    	if (relatedSnippetId != null) {
+    		relatedSnippet = Snippet.findById(relatedSnippetId);
+    	}
+    	if (relatedSnippet != null) {
+    		snippet.addRelationship(RelationshipTypes.RELATED_SNIPPET, relatedSnippet);
+    	}
     	mysnippets();
     }
 
