@@ -36,9 +36,17 @@ public abstract class AbstractController extends Controller {
 				tagNamesAndCounts.put(tagName, tagCount);
 			} 
 		}
+		
+		Logger.debug ("%s", tagNamesAndCounts);
 	    ValueComparator<String, Integer> comparator = new ValueComparator<String, Integer> (tagNamesAndCounts);
-	    Map<String, Integer> sortedMap = new TreeMap<String, Integer> (comparator);
-	    sortedMap.putAll(tagNamesAndCounts);
+	    TreeMap<String, Integer> sortedMap = new TreeMap<String, Integer> (comparator);
+	    
+	    for (String key: tagNamesAndCounts.keySet()) {
+	    	Logger.debug ("Adding key %s with value %s", key, tagNamesAndCounts.get(key));
+	    	sortedMap.put(key, tagNamesAndCounts.get(key));
+	    }
+	    //sortedMap.putAll(tagNamesAndCounts);
+		Logger.debug ("%s", sortedMap);
 	    List<String> tagNames = new ArrayList<String> (sortedMap.keySet());
 	    
 	    Logger.debug ("Tag names:");

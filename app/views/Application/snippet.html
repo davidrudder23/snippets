@@ -38,11 +38,13 @@ function getRelatedSnippet(snippetId) {
 		url:action({snippetId: snippetId}),
 		success: function(snippet) {
 			var snippetId = snippet.id;
-			var relatedAction = #{jsAction @snippet(':snippetName') /};
-			var relatedUrl = action({snippetId: snippetId});
+			var snippetName = snippet.seoName;
+
+			var link = #{jsAction @snippet(':snippetName') /};
+			var linkUrl = link({snippetName:snippetName}); 
 			
 			var html = "<div class=\"related-snippet\" id=\"related-snippet-"+snippetId+"\">"+
-				"<h3 id=\"snippet-name\"><a href=\"@{snippet()}?snippetName="+snippet.name+"\">"+snippet.name+"</a></h3>"+
+				"<h3 id=\"snippet-name\"><a href=\""+linkUrl+"\">"+snippet.name+"</a></h3>"+
 				"<p id=\"snippet-text\">"+snippet.text+"</p>"+
 			"</div>"
 			$("#related-snippet-"+snippetId).html(html);
@@ -80,6 +82,10 @@ function getRelatedSnippets() {
 	});
 }
 
+function relateSnippet() {
+	showModal("@{SnippetActions.addRelationshipModal(snippet.seoName)}");
+}
+
 </script>
 #{/set}
 
@@ -94,7 +100,7 @@ function getRelatedSnippets() {
 
 	<div class="well" style="width: 800px">
 
-		<div class="prev-arrow"><a href="@{getPrevSnippet(snippet?.name)}">&lt;</a></div>
+		<div class="prev-arrow"><a href="@{getPrevSnippet(snippet?.seoName)}">&lt;</a></div>
 	
 			<div class="snippet" id="snippet">
 				<h3 id="snippet-name">${snippet.name}</h3>
@@ -111,11 +117,15 @@ function getRelatedSnippets() {
 				</ul>
 			</div>
 	
-		<div class="next-arrow"><a href="@{getNextSnippet(snippet?.name)}">&gt;</a></div>
+		<div class="next-arrow"><a href="@{getNextSnippet(snippet?.seoName)}">&gt;</a></div>
 
 	</div>
+	
+	<div class="" style="float: left; margin: auto">
+		<button onclick="relateSnippet()">Relate this snippet to another</button>
+	</div>
 
-	<div style="display: block; position: relative; width: 100%; margin: auto">
+	<div style="display: block; position: relative; width: 100%; float: left; margin: auto">
 		<div class="" style="display: block; position: relative; width: 25%; margin: auto">
 		</div>
 		<div class="" id="snippet-related-snippets" style="display: block; position: relative; width: 50%; margin: auto">
@@ -125,8 +135,7 @@ function getRelatedSnippets() {
 	</div>
 	
 	
-	
-	
+
 	
 	
 	

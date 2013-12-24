@@ -25,7 +25,7 @@
 	float: left;
 	display: block;
 	width: 80%;
-	padding: 10px 0px 0px 0px;
+	padding: 10px 0px 0px 10px;
 }
 
 .next-arrow {
@@ -48,4 +48,21 @@
  	width: 90%;
  	display: block; 
  	float: left;	
+}
+
+.generic-modal {
+	width: 40%;
+	min-width: 420px;
+	min-height: 340px;
+	height: 40%;
+	position: absolute !important;
+	float: left;
+	top: 100px;
+	left: 30%;
+	
+	padding: 20px;
+	
+	background-color: red;
+
+	display: none;	
 }

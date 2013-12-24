@@ -1,0 +1,12 @@
+<form action="@{addRelationship()}" name="add-relationship-form" method="POST">
+
+<input type="hidden" name="sourceSeoName" value="${snippet.seoName}">
+<select name="destSeoName" onchange='document.forms["add-relationship-form"].submit()'>
+	<option value="">Relate this to what other snippet?</option>
+
+#{list items:snippets, as:'snippet'}
+	<option value="${snippet.seoName}">${snippet.name}</option>
+#{/list}
+</select>
+
+</form>

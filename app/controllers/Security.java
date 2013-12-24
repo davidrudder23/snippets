@@ -32,7 +32,7 @@ public class Security extends Controller {
 		
 		Session.current().put("user", user.username);
 		
-		Application.snippet(null, null);
+		Application.snippet(null);
 	}
 
 }

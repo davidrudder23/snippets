@@ -25,27 +25,21 @@ import models.*;
 public class Application extends AbstractController {
 
 	@Before
-	public static void authenticate() {
+	public static void authenticateAndSetup() {
 		User user = Security.getLoggedInUser();
 		if (user==null) Security.login();
 	}
 
     public static void index() {
-    	snippet(null, null);
+    	snippet(null);
     }
     
-    public static void snippet(Long snippetId, String snippetName) {
+    public static void snippet(String snippetName) {
 		User user = Security.getLoggedInUser();
 		
 		Snippet snippet = null;
-		if (snippetId!=null) {
-			snippet = Snippet.findById(snippetId);
-		}
-		
-		if ((snippet == null) && (snippetName!=null)) {
-			snippet = Snippet.find("byName", snippetName).first();
-		}
-		
+		snippet = Snippet.find("bySeoName", snippetName).first();
+
 		if (snippet == null) {
 	    	List<Snippet> mySnippets = user.getSnippets();
 	    	
@@ -53,37 +47,48 @@ public class Application extends AbstractController {
 	    		snippet = mySnippets.get(0);
 	    	}
 		}
+		
+		if (snippet == null) {
+			newSnippet();
+		}
 
     	render(snippet);
+    }
+    
+    public static void newSnippet() {
+		User user = Security.getLoggedInUser();
+    	Snippet snippet = new Snippet();
+    	
+    	render(user, snippet);
     }
     
     public static void getNextSnippet(String currentSnippetName) {
 		User user = Security.getLoggedInUser();
     	Snippet snippet = null;
     	if (currentSnippetName == null) {
-			snippet(null, null);
+			snippet(null);
     	}
     	List<Snippet> mySnippets = user.getSnippets();
     	
     	if ((mySnippets == null) || (mySnippets.size()<=1)) {
-			snippet(null, null);
+			snippet(null);
     	}
 
     	boolean foundIt = false;
     	for (Snippet mySnippet: mySnippets) {
-    		if (mySnippet.name.equals(currentSnippetName)) {
+    		if (mySnippet.seoName.equals(currentSnippetName)) {
     			foundIt = true;
     		} else if (foundIt) {
     			snippet = mySnippet;
-    			snippet(null, snippet.name);
+    			snippet(snippet.seoName);
     		}
     	}
     	
     	if (foundIt) {
 			snippet = mySnippets.get(0);
-			snippet(null, snippet.name);
+			snippet(snippet.seoName);
     	}
-    	snippet(null, null);
+    	snippet(null);
     	
     }
     
@@ -91,23 +96,23 @@ public class Application extends AbstractController {
 		User user = Security.getLoggedInUser();
     	Snippet snippet = null;
     	if (snippetName == null) {
-        	snippet(null, null);
+        	snippet(null);
     	}
     	List<Snippet> mySnippets = user.getSnippets();
     	
     	if ((mySnippets == null) || (mySnippets.size()<=1)) {
-        	snippet(null, null);
+        	snippet(null);
     	}
 
     	snippet = mySnippets.get(mySnippets.size()-1);
     	
     	for (Snippet mySnippet: mySnippets) {
-    		if (mySnippet.name.equals(snippetName)) {
-    			snippet(null, snippet.name);
+    		if (mySnippet.seoName.equals(snippetName)) {
+    			snippet(snippet.seoName);
     		}
     		snippet = mySnippet;
     	}
-    	snippet(null, null);
+    	snippet(null);
     }
     
     
@@ -154,7 +159,7 @@ public class Application extends AbstractController {
     	if (relatedSnippet != null) {
     		snippet.addRelationship(RelationshipTypes.RELATED_SNIPPET, relatedSnippet);
     	}
-    	snippet(null, snippet.name);
+    	snippet(snippet.name);
     }
 
     public static void removeTagAjaxUpdate(Long tagId, Long snippetId) {

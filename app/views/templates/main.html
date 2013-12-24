@@ -41,6 +41,22 @@
 			
 			#{get 'moreOnReady' /}
 		});
+		
+		
+		function showModal(url) {
+			$.ajax({
+				url: url,
+				success: function(data) {
+					$("#generic-modal").html(data);
+					$(".generic-modal").show();
+				}
+			});
+
+		}
+		
+		function hideModal(url) {
+			$(".generic-modal").hide();
+		}
 		</script>
     </head>
     <body>
@@ -70,6 +86,14 @@
     <div class="container-fluid">
        #{doLayout /}
     </div>
+    
+    <div class="generic-modal modal-content">
+    <span style="float:right" onclick="hideModal()">X</span>
+    <div id="generic-modal">
+    </div>
+	</div>
+	
+    
             
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.js"></script>
         #{get 'moreScripts' /}

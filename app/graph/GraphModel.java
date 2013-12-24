@@ -40,12 +40,28 @@ public abstract class GraphModel extends Model {
 		}
 	}
 	
+	/**
+	 * This gets a list of all the relationships that this model has with another
+	 * of the specified type.  This returns the *relationships*, not the actual objects.
+	 * One example of the use is to say "Show me all the tags I relate to, in one way
+	 * or another".  We'll use this to build basic access control 
+	 * 
+	 * @param targetClass
+	 * @return
+	 */
+	public List<Relationship> getRelationships(Class targetClass) {
+		List<Relationship> relationships = Relationship.find("sourceClass=? OR destinationClass=?", targetClass.getName(), targetClass.getName()).fetch();
+		//Logger.debug("For class %s, relationships=%s", targetClass.getName(), relationships);
+		
+		return relationships;
+	}
+	
 	public List<?> getRelations(String relationshipType, Class destinationClass) {
 		Long sourceId = getId();
 		Class sourceClass = getClass();
-		Logger.debug ("Getting relationships with arguments id: %d sourceClass: %s destClass: %s", sourceId, sourceClass, destinationClass);
+		//Logger.debug ("Getting relationships with arguments id: %d sourceClass: %s destClass: %s", sourceId, sourceClass, destinationClass);
 		List<Relationship> relationships = Relationship.find("byTypeAndSourceIdAndSourceClassAndDestinationClass", relationshipType, sourceId, sourceClass.getName(), destinationClass.getName()).fetch();
-		Logger.debug ("Found %s relationships from source to dest with arguments id: %d sourceClass: %s destClass: %s", relationships.size(), sourceId, sourceClass, destinationClass);
+		//Logger.debug ("Found %s relationships from source to dest with arguments id: %d sourceClass: %s destClass: %s", relationships.size(), sourceId, sourceClass, destinationClass);
 		List<Model> relations = new ArrayList<>();
 		
 		try {
@@ -58,7 +74,7 @@ public abstract class GraphModel extends Model {
 			
 			for (Relationship relationship: relationships) {
 				Model model = (Model)findMethod.invoke(null, relationship.destinationId);
-				Logger.debug ("Found model=%s", model);
+				//Logger.debug ("Found model=%s", model);
 				relations.add(model);
 			}
 		} catch (Exception e) {
@@ -66,7 +82,7 @@ public abstract class GraphModel extends Model {
 		}
 		
 		relationships = Relationship.find("byTypeAndDestinationIdAndDestinationClassAndSourceClass", relationshipType, sourceId, sourceClass.getName(), destinationClass.getName()).fetch();
-		Logger.debug ("Found %s relationships from dest to source with arguments id: %d sourceClass: %s destClass: %s", relationships.size(), sourceId, sourceClass, destinationClass);
+		//Logger.debug ("Found %s relationships from dest to source with arguments id: %d sourceClass: %s destClass: %s", relationships.size(), sourceId, sourceClass, destinationClass);
 
 		try {
 			Method findMethod = destinationClass.getMethod("findById", Object.class);
@@ -78,7 +94,7 @@ public abstract class GraphModel extends Model {
 			
 			for (Relationship relationship: relationships) {
 				Model model = (Model)findMethod.invoke(null, relationship.sourceId);
-				Logger.debug ("Found model=%s", model);
+				//Logger.debug ("Found model=%s", model);
 				relations.add(model);
 			}
 		} catch (Exception e) {

@@ -1,0 +1,13 @@
+#{extends 'templates/main.html' /}
+#{set title:'New Snippet' /}
+
+	<div class="span1" style="margin-top: 30px">
+		<form action="@{Application.addSnippet()}" mathod="POST">
+		<h4>Add a New Snippet</h4>
+		<input type="hidden" name="relatedSnippetId" id="related-snippet-id" value="">
+		<p><label>Name<input style="margin-left: 10px" type="text" size="35"name="name"/></label></p>
+		<p><label>Text<textarea style="margin-left: 10px" rows="4" cols="40" name="text"></textarea></label></p>
+		<p><button>Submit</button></p>
+		</form>
+	</div>
+		

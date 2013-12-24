@@ -10,6 +10,8 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.PostLoad;
 import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
 import com.google.gson.Gson;
@@ -23,6 +25,7 @@ import com.google.gson.JsonSerializer;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import util.StringUtils;
 
 @Entity
 public class Snippet extends GraphModel {
@@ -31,6 +34,8 @@ public class Snippet extends GraphModel {
 	public String name;
 
 	public String text;
+	
+	public String seoName;
 
 	@Transient
 	private List<User> authors = null;
@@ -58,10 +63,62 @@ public class Snippet extends GraphModel {
 		List<Snippet> snippets = (List<Snippet>) getRelations(RelationshipTypes.RELATED_SNIPPET, Snippet.class);
 		return snippets;
 	}
+	
+	public static List<Snippet> getReadableSnippets(User user) {
+		
+		List<Snippet> snippets = new ArrayList();
+		List<Relationship> relationships = user.getRelationships(Snippet.class);
+		
+		for (Relationship relationship: relationships) {
+			if (RelationshipTypes.AUTHOR.equals(relationship.type)) {
+				if (relationship.destinationClass.equals(Snippet.class.getName())) {
+					Snippet snippet = Snippet.findById(relationship.destinationId);
+					if (snippet != null) {
+						snippets.add(snippet);
+					}
+				} else if (relationship.sourceClass.equals(Snippet.class.getName())) {
+					Snippet snippet = Snippet.findById(relationship.sourceId);
+					if (snippet != null) {
+						snippets.add(snippet);
+					}
+				}
+			}
+		}
+		
+		return snippets;
+		
+	}
+	
+	@PreUpdate
+	public void preUpdateHandler() {
+		if (StringUtils.isEmpty(seoName))
+			fixSeoName();
+	}
 
+	@PostLoad
+	public void postLoadHandler() {
+		if (StringUtils.isEmpty(seoName)) {
+			fixSeoName();
+			save();
+		}
+	}
+	
 	@PostUpdate
-	public void postUpdate() {
+	public void postUpdateHandler() {
 		authors = null;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		fixSeoName();
+	}
+	
+	public void fixSeoName() {
+		seoName = new String(name);
+		seoName = seoName.trim().
+				toLowerCase().
+				replaceAll(" ", "_").
+				replaceAll("[^0-9a-zA-Z_]", "");
 	}
 
 	public JsonSerializer<Snippet> getJsonSerializer() {
@@ -75,6 +132,7 @@ public class Snippet extends GraphModel {
 				JsonObject jsonObject = new JsonObject();
 				jsonObject.addProperty("id", snippet.id);
 				jsonObject.addProperty("name", snippet.name);
+				jsonObject.addProperty("seoName", snippet.seoName);
 				jsonObject.addProperty("text", snippet.text);
 				
 				jsonObject.add("tags", context.serialize(snippet.getTags()));
