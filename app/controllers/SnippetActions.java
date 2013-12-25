@@ -9,6 +9,7 @@ import play.Logger;
 import models.Relationship;
 import models.Snippet;
 import models.SnippetType;
+import models.Tag;
 import models.User;
 
 public class SnippetActions extends AbstractController {
@@ -139,4 +140,27 @@ public class SnippetActions extends AbstractController {
     	Application.snippet(snippet.seoName);
     }
     
+	public static void removeTag(String snippetName, String tagName) {
+		Snippet parent = Snippet.findBySeoName(snippetName);
+		if (parent == null) {
+			Application.snippet(null);
+		}
+		Tag tag = Tag.find("byName", tagName).first();
+		if (tag == null) {
+			Application.snippet(snippetName);
+		}
+		
+		Relationship relationship = Relationship.find("bySourceClassAndSourceIdAndDestinationClassAndDestinationId", Snippet.class.getName(), parent.id, Tag.class.getName(), tag.id).first();
+		if (relationship == null) {
+			relationship = Relationship.find("bySourceClassAndSourceIdAndDestinationClassAndDestinationId", Snippet.class.getName(), tag.id, Tag.class.getName(), parent.id).first();
+		}
+		
+		if (relationship == null) {
+			Application.snippet(snippetName);
+		}
+		
+		relationship.delete();
+		Application.snippet(snippetName);
+		
+	}
 }

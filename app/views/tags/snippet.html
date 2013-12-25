@@ -16,7 +16,12 @@
 			<span class="snippet-tags-label">Tags</span> 
 			<span class="badge" style="float: right" onclick="showAddTagModal()">Add Tag</span> 
 			#{list items:_snippet.getTags(), as:'tag'} 
-				<span class="badge"><i style="float: right" class="fa fa-unlink"></i><a href="/tag/${tag.name}">${tag.getName()}</a></span> 
+				<span class="badge">
+					<a href="@{SnippetActions.removeTag(_snippet.seoName, tag.name)}">
+						<i style="float: right" class="fa fa-unlink"></i>
+					</a>
+					<a href="/tag/${tag.name}">${tag.getName()}</a>
+				</span> 
 			#{/list}
 		</li>
 	</ul>
