@@ -1,9 +1,10 @@
 #{if "column".equals(_placement)}
-<div class="related-snippet well" id="related-snippet-${_snippet.id}">
+<div class="related-snippet well" id="related-snippet-${_relatedSnippet.id}">
+	<a href="@{SnippetActions.removeRelationship(_snippet.seoName, _relatedSnippet.seoName)}"><i style="float: right" class="fa fa-unlink"></i></a>
 	<h3 id="snippet-name">
-		<a href="@{Application.snippet(_snippet.seoName)}">${_snippet.name}</a>
+		<a href="@{Application.snippet(_relatedSnippet.seoName)}">${_relatedSnippet.name}</a>
 	</h3>
-	<p id="snippet-text">${_snippet.text}</p>
+	<p id="snippet-text">${_relatedSnippet.text}</p>
 </div>
 #{/if}#{else}
 <div class="snippet" id="snippet">
@@ -15,7 +16,7 @@
 			<span class="snippet-tags-label">Tags</span> 
 			<span class="badge" style="float: right" onclick="showAddTagModal()">Add Tag</span> 
 			#{list items:_snippet.getTags(), as:'tag'} 
-				<span class="badge"><a href="/tag/${tag.name}">${tag.getName()}</a></span> 
+				<span class="badge"><i style="float: right" class="fa fa-unlink"></i><a href="/tag/${tag.name}">${tag.getName()}</a></span> 
 			#{/list}
 		</li>
 	</ul>

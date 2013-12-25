@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import play.Logger;
+import models.Relationship;
 import models.Snippet;
 import models.SnippetType;
 import models.User;
@@ -58,6 +59,29 @@ public class SnippetActions extends AbstractController {
 		Application.snippet(sourceSnippet.seoName);
 	}
 	
+	public static void removeRelationship(String parentSnippetName, String relatedSnippetName) {
+		Snippet parent = Snippet.findBySeoName(parentSnippetName);
+		if (parent == null) {
+			Application.snippet(null);
+		}
+		Snippet related = Snippet.findBySeoName(relatedSnippetName);
+		if (related == null) {
+			Application.snippet(parentSnippetName);
+		}
+		
+		Relationship relationship = Relationship.find("bySourceClassAndSourceIdAndDestinationClassAndDestinationId", Snippet.class.getName(), parent.id, Snippet.class.getName(), related.id).first();
+		if (relationship == null) {
+			relationship = Relationship.find("bySourceClassAndSourceIdAndDestinationClassAndDestinationId", Snippet.class.getName(), related.id, Snippet.class.getName(), parent.id).first();
+		}
+		
+		if (relationship == null) {
+			Application.snippet(parentSnippetName);
+		}
+		
+		relationship.delete();
+		Application.snippet(parentSnippetName);
+		
+	}
 	
 	public static void addNoteModal(String snippetSeoName) {
 		User user = Security.getLoggedInUser();
@@ -114,5 +138,5 @@ public class SnippetActions extends AbstractController {
     	}
     	Application.snippet(snippet.seoName);
     }
-
+    
 }

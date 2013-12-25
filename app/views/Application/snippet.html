@@ -40,6 +40,9 @@ function addNote() {
 	showModal("@{SnippetActions.addNoteModal(snippet.seoName)}");
 }
 
+function removeRelatedSnippet(parentSnippetName, relatedSnippetName) {
+}
+
 </script>
 #{/set}
 
@@ -82,7 +85,7 @@ function addNote() {
 		</p>
 		
 		#{list items:snippet.getRelatedSnippets(), as:'relatedSnippet'}
-			#{snippet snippet:relatedSnippet, placement:"column" /}
+			#{snippet snippet: snippet, relatedSnippet:relatedSnippet, placement:"column" /}
 		#{/list}
 		</div>
 		<div class="column-3">
