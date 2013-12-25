@@ -1,6 +1,7 @@
 <form action="@{SnippetActions.addNote()}" name="add-note-form" method="POST">
 
 <input type="hidden" name="snippetSeoName" value="${snippet.seoName}">
-<textarea name="text"></textarea>
-<input type="submit" value="Add Note">
+<h4>New Note</h4>
+<p><textarea name="text" rows="10" cols="50"></textarea></p>
+<p><input type="submit" value="Add Note"></p>
 </form>

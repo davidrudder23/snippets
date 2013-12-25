@@ -1,0 +1,9 @@
+#{extends 'templates/main.html' /}
+
+<form action="@{Security.processRegistration()}" method="POST">
+	<p><label>Username <input type="text" name="username" /></label></p>
+	<p><label>Email (optional) <input type="text" name="email" /></label></p>
+	<p><label>Password <input type="password" name="password" /></label></p>
+	<p><button>Login</button>
+</form>
+</div>

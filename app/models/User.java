@@ -24,6 +24,8 @@ public class User extends GraphModel {
 
 	public String username;
 	
+	public String email;
+
 	public String hashedPassword;
 	
 	public String salt;

@@ -61,10 +61,10 @@ function addNote() {
 
 	</div>
 	
-	<div style="display: block; position: relative; width: 100%; float: left; margin: auto">
-		<div class="" style="display: block; position: relative; width: 31%; margin: 0px 2% 0px 0px; float: left">
+	<div style="display: block; position: relative; width: 800px; float: left; margin: auto">
+		<div class="column-3">
 		<p>
-			<h2>Notes</h2>
+			<h2 class="3-column-header">Notes</h2>
 			<button onclick="addNote()">Add a new note</button>
 		</p>
 
@@ -75,9 +75,9 @@ function addNote() {
 			</div>
 		#{/list}
 		</div>
-		<div class="" id="snippet-related-snippets" style="display: block; position: relative; width: 30%; margin: 0px 2% 0px 2%; float: left">
+		<div class="column-3" id="snippet-related-snippets">
 		<p>
-			<h2>Related Snippets</h2>
+			<h2 class="column-header-3">Related Snippets</h2>
 			<button onclick="relateSnippet()">Relate this snippet to another</button>
 		</p>
 		
@@ -85,9 +85,9 @@ function addNote() {
 			#{snippet snippet:relatedSnippet, placement:"column" /}
 		#{/list}
 		</div>
-		<div class="" style="display: block; position: relative; width: 31%; margin: 0px 0px 0px 2%; float: left">
+		<div class="column-3">
 		<p>
-			<h2>Shared With</h2>
+			<h2 class="column-header-3">Shared With</h2>
 			<button onclick="relateSnippet()">Share this snippet</button>
 		</p>
 

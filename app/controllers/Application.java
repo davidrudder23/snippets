@@ -137,30 +137,6 @@ public class Application extends AbstractController {
     }
     
 
-    public static void addSnippet(String name, String text, String snippetType, Long relatedSnippetId) {
-		User user = Security.getLoggedInUser();
-    	Snippet snippet = new Snippet();
-    	snippet.name = name;
-    	snippet.text = text;
-    	snippet.addRelationship(RelationshipTypes.AUTHOR, user);
-    	
-    	SnippetType type = SnippetType.findByName(name);
-    	if (type!=null) {
-    		snippet.addRelationship(RelationshipTypes.SNIPPET_TYPE, type);
-    	}
-    	
-    	snippet.save();
-
-    	Snippet relatedSnippet = null;
-    	if (relatedSnippetId != null) {
-    		relatedSnippet = Snippet.findById(relatedSnippetId);
-    	}
-    	if (relatedSnippet != null) {
-    		snippet.addRelationship(RelationshipTypes.RELATED_SNIPPET, relatedSnippet);
-    	}
-    	snippet(snippet.name);
-    }
-
     public static void removeTagAjaxUpdate(Long tagId, Long snippetId) {
     	if (tagId == null) {
     		renderText("Can not find tag");

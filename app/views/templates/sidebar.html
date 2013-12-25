@@ -1,24 +1,28 @@
 #{extends 'templates/main.html' /}
 
+#{set 'moreScripts'}
+#{get 'moreScripts' /}
+<script>
+function addSnippet() {
+	showModal("@{SnippetActions.addSnippetModal()}");
+}
+</script>
+#{/set}
 <div class="row-fluid">
 	<div class="span3" id="leftCol">
 		<div class="sidebar">
 		
-			<div class="well">
-				<form action="@{Application.addSnippet()}" mathod="POST">
-				<h4>Add a New Snippet</h4>
-				<input type="hidden" name="relatedSnippetId" id="related-snippet-id" value="">
-				<p><label>Name<input type="text" size="12"name="name"/></label></p>
-				<p><label>Text<textarea rows="4" cols="17" name="text"></textarea></label></p>
-				<p><button>Submit</button></p>
-				</form>
-			</div>
-		
-		
 			<div class="well sidebar-well">
+				<button onclick="addSnippet(); return false">Add Snippet</button>
 				<h3>Filter</h3>
 				<input type="checkbox" id="tag_${tagName}" />Show all snippets
 				<h2>Tags</h2>
+				<ul class="nav nav-stacked affix-top" id="sidebar">
+				#{list items:tagNames, as:'tagName'}
+					<li><input type="checkbox" id="tag_${tagName}" />${tagName}</li>
+				#{/list}
+				</ul>
+				<h2>Shared With</h2>
 				<ul class="nav nav-stacked affix-top" id="sidebar">
 				#{list items:tagNames, as:'tagName'}
 					<li><input type="checkbox" id="tag_${tagName}" />${tagName}</li>

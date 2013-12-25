@@ -9,6 +9,10 @@
 	margin: auto;
 }
 
+.content {
+	margin-top: 10px;
+}
+
 .well {
 	display: block;
 	float: left;
@@ -28,7 +32,7 @@
 	float: left;
 	display: block;
 	width: 80%;
-	padding: 10px 0px 0px 10px;
+	padding: 0;
 }
 
 .next-arrow {
@@ -53,17 +57,29 @@
  	float: left;	
 }
 
+.column-header-3 {
+	display: block; 
+	position: relative; 
+	float: left;
+}
+
+.column-3 {
+	display: block; 
+	position: relative; 
+	float: left;
+	width: 31%; 
+	margin: 0px 1% 0px 1% !important; 
+}
+
 .generic-modal {
-	width: 40%;
-	min-width: 420px;
-	min-height: 340px;
-	height: 40%;
+	width: auto;
+	height: auto;
 	position: absolute !important;
 	float: left;
 	top: 100px;
 	left: 30%;
 	
-	padding: 20px;
+	padding: 30px 50px 30px 50px;
 	
 	background-color: red;
 

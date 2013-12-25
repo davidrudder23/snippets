@@ -13,10 +13,10 @@
 	<ul class="list-group">
 		<li class="list-group-item">
 			<span class="snippet-tags-label">Tags</span> 
+			<span class="badge" style="float: right" onclick="showAddTagModal()">Add Tag</span> 
 			#{list items:_snippet.getTags(), as:'tag'} 
 				<span class="badge"><a href="/tag/${tag.name}">${tag.getName()}</a></span> 
 			#{/list}
-			<span class="badge" style="float: right" onclick="showAddTagModal()">Add Tag</span> 
 		</li>
 	</ul>
 </div>
