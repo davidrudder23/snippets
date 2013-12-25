@@ -115,7 +115,6 @@ public class Application extends AbstractController {
     	snippet(null);
     }
     
-    
     public static void getMySnippetAjaxJson(Long snippetId) {
 		User user = Security.getLoggedInUser();
     	Snippet snippet = null;

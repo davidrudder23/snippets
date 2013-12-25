@@ -32,58 +32,12 @@ function showAddTagModal() {
 	});
 }
 
-function getRelatedSnippet(snippetId) {
-	var action = #{jsAction @getMySnippetAjaxJson(':snippetId') /};
-	$.ajax({
-		url:action({snippetId: snippetId}),
-		success: function(snippet) {
-			var snippetId = snippet.id;
-			var snippetName = snippet.seoName;
-
-			var link = #{jsAction @snippet(':snippetName') /};
-			var linkUrl = link({snippetName:snippetName}); 
-			
-			var html = "<div class=\"related-snippet\" id=\"related-snippet-"+snippetId+"\">"+
-				"<h3 id=\"snippet-name\"><a href=\""+linkUrl+"\">"+snippet.name+"</a></h3>"+
-				"<p id=\"snippet-text\">"+snippet.text+"</p>"+
-			"</div>"
-			$("#related-snippet-"+snippetId).html(html);
-		}
-	});
-	
-}
-
-function getRelatedSnippets() {
-	// first load this snippet
-	var snippetId = $("#snippet-id").attr("snippet-id");
-	var action = #{jsAction @getMySnippetAjaxJson(':snippetId') /};
-	$.ajax({
-		url:action({snippetId: snippetId}),
-		success: function(data) {
-			var snippet = eval(data);
-		
-			// display related snippets
-			$("#snippet-related-snippets").html("");
-			// first print out all the div containers. this will maintain the order, so reloading doesn't shuffle
-			var listSize = snippet.relatedSnippetIds.length;
-			if (listSize>20) listSize = 20;
-			for (var relatedSnippetNum = 0; relatedSnippetNum < listSize; relatedSnippetNum++) {
-				var relatedSnippetId = snippet.relatedSnippetIds[relatedSnippetNum];
-				
-				var html = "<div class=\"related-snippet well\" style=\"display: block; position: relative; width: 100%; margin: 10px auto\" id=\"related-snippet-"+relatedSnippetId+"\"></div>";
-				$("#snippet-related-snippets").append(html);
-			}
-			// now load the actual snippet over ajax
-			for (var relatedSnippetNum = 0; relatedSnippetNum < listSize; relatedSnippetNum++) {
-				var relatedSnippetId = snippet.relatedSnippetIds[relatedSnippetNum];
-				getRelatedSnippet(relatedSnippetId);
-			}
-		}
-	});
-}
-
 function relateSnippet() {
 	showModal("@{SnippetActions.addRelationshipModal(snippet.seoName)}");
+}
+
+function addNote() {
+	showModal("@{SnippetActions.addNoteModal(snippet.seoName)}");
 }
 
 </script>
@@ -95,42 +49,61 @@ function relateSnippet() {
 		showAddTagModal($("#add-tag-button").attr('snippet-id'));
 	});
 	
-	getRelatedSnippets();
+	//getRelatedSnippets();
 #{/set}
 
 	<div class="well" style="width: 800px">
 
 		<div class="prev-arrow"><a href="@{getPrevSnippet(snippet?.seoName)}">&lt;</a></div>
 	
-			<div class="snippet" id="snippet">
-				<h3 id="snippet-name">${snippet.name}</h3>
-				<p id="snippet-text">${snippet.text}</p>
-				<span style="display: none" id="snippet-id" snippet-id="${snippet?.id}"></span>
-				<ul class="list-group">
-					<li class="list-group-item">
-						<span class="snippet-tags-label">Tags</span> 
-						#{list items:snippet.getTags(), as:'tag'} 
-							<span class="badge"><a href="/tag/${tag.name}">${tag.getName()}</a></span> 
-						#{/list}
-						<span class="badge" style="float: right" onclick="showAddTagModal()">Add Tag</span> 
-					</li>
-				</ul>
-			</div>
-	
+			#{snippet snippet:snippet, placement:"main"/}	
 		<div class="next-arrow"><a href="@{getNextSnippet(snippet?.seoName)}">&gt;</a></div>
 
 	</div>
 	
-	<div class="" style="float: left; margin: auto">
-		<button onclick="relateSnippet()">Relate this snippet to another</button>
-	</div>
-
 	<div style="display: block; position: relative; width: 100%; float: left; margin: auto">
-		<div class="" style="display: block; position: relative; width: 25%; margin: auto">
+		<div class="" style="display: block; position: relative; width: 31%; margin: 0px 2% 0px 0px; float: left">
+		<p>
+			<h2>Notes</h2>
+			<button onclick="addNote()">Add a new note</button>
+		</p>
+
+		#{list items:snippet.getNotes(), as:'note'}
+			<div class="note well" id="note-${note.id}">
+				<p>${note?.attributes?.get("text")}</p>
+				<p>Author: ${note?.getTarget(models.User.class)?.username}</p>
+			</div>
+		#{/list}
 		</div>
-		<div class="" id="snippet-related-snippets" style="display: block; position: relative; width: 50%; margin: auto">
+		<div class="" id="snippet-related-snippets" style="display: block; position: relative; width: 30%; margin: 0px 2% 0px 2%; float: left">
+		<p>
+			<h2>Related Snippets</h2>
+			<button onclick="relateSnippet()">Relate this snippet to another</button>
+		</p>
+		
+		#{list items:snippet.getRelatedSnippets(), as:'relatedSnippet'}
+			#{snippet snippet:relatedSnippet, placement:"column" /}
+		#{/list}
 		</div>
-		<div class="" style="display: block; position: relative; width: 25%; margin: auto">
+		<div class="" style="display: block; position: relative; width: 31%; margin: 0px 0px 0px 2%; float: left">
+		<p>
+			<h2>Shared With</h2>
+			<button onclick="relateSnippet()">Share this snippet</button>
+		</p>
+
+		#{list items:snippet.getUsersWithReadAccess(), as:'user'}
+			<div class="user well" id="user-${user.id}">
+				<h3 id="user-name">
+					<a href="#">${user.username}</a>
+				</h3>
+				<span class="snippet-tags-label">Access Rights</span>
+				#{list items:user.accessLevels(snippet), as:'accessLevel'}
+					<span class="badge">${accessLevel}</span>
+				#{/list} 
+				</span>
+			</div>
+		#{/list}
+		</div>
 		</div>
 	</div>
 	

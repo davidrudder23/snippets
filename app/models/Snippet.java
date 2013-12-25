@@ -44,6 +44,11 @@ public class Snippet extends GraphModel {
 		List<Snippet> snippets = Snippet.find("byName", name).fetch();
 		return snippets;
 	}
+	
+	public static Snippet findBySeoName(String seoName) {
+		Snippet snippet = Snippet.find("bySeoname", seoName).first();
+		return snippet;
+	}
 
 	public List<User> getAuthors() {
 		// if (authors !=null) return authors;
@@ -87,6 +92,42 @@ public class Snippet extends GraphModel {
 		
 		return snippets;
 		
+	}
+	
+	public List<User> getUsersWithReadAccess() {
+		List<User> users = null;
+		
+		users = new ArrayList<User>();
+		List<String> accessTypes = new ArrayList<String>();
+		accessTypes.add(RelationshipTypes.AUTHOR);
+		accessTypes.add(RelationshipTypes.READ_ACCESS);
+		accessTypes.add(RelationshipTypes.WRITE_ACCESS);
+		accessTypes.add(RelationshipTypes.DELETE_ACCESS);
+		
+		for (String accessType: accessTypes) {
+			List<User> accessUsers = (List<User>)getRelations(accessType, User.class);
+			for (User accessUser: accessUsers) {
+				if (!users.contains(accessUser)) {
+					users.add(accessUser);
+				}
+			}
+		}
+		
+		return users;
+	}
+	
+	public List<Relationship> getNotes() {
+		
+		List<Relationship> notes = new ArrayList<Relationship>();
+		
+		List<Relationship> relationships = getRelationships(User.class);
+		for (Relationship relationship: relationships) {
+			if (relationship.type.equals(RelationshipTypes.NOTE)) {
+				notes.add(relationship);
+			}
+		}
+		
+		return notes;
 	}
 	
 	@PreUpdate

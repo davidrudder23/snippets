@@ -11,7 +11,10 @@
 
 .well {
 	display: block;
-	float: left
+	float: left;
+	position: relative;
+	margin: auto;
+	width: 100%;
 }
 
 .sidebar {

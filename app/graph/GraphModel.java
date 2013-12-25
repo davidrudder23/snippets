@@ -50,8 +50,30 @@ public abstract class GraphModel extends Model {
 	 * @return
 	 */
 	public List<Relationship> getRelationships(Class targetClass) {
-		List<Relationship> relationships = Relationship.find("sourceClass=? OR destinationClass=?", targetClass.getName(), targetClass.getName()).fetch();
+		String thisClassName = getClass().getName();
+		List<Relationship> relationships = Relationship.find("(destinationClass=? and destinationId=? and sourceClass=?) OR (sourceClass=? and sourceId=? and destinationClass=?)", 
+				thisClassName, id, targetClass.getName(), 
+				thisClassName, id, targetClass.getName()).fetch();
 		//Logger.debug("For class %s, relationships=%s", targetClass.getName(), relationships);
+		
+		return relationships;
+	}
+	
+	/**
+	 * This gets a list of all the relationships that this model has with another model.  
+	 * This returns the *relationships*, not the actual objects.
+	 * One example of the use is to say "Show me all the tags I relate to, in one way
+	 * or another".  We'll use this to build basic access control 
+	 * 
+	 * @param targetClass
+	 * @return
+	 */
+	public List<Relationship> getRelationships(Class targetClass, Long targetId) {
+		String thisClassName = getClass().getName();
+		Logger.debug ("Getting relationships for destinationClass=%s and destinationId=%s and sourceClass=%s and sourceId=%s", thisClassName, id, targetClass.getName(), targetId);
+		List<Relationship> relationships = Relationship.find("(destinationClass=? and destinationId=? and sourceClass=? and sourceId=?) OR (sourceClass=? and sourceId=? and destinationClass=? and destinationId=?)", 
+				thisClassName, id, targetClass.getName(), targetId,
+				thisClassName, id, targetClass.getName(), targetId).fetch();
 		
 		return relationships;
 	}

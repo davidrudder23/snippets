@@ -2,6 +2,7 @@ package controllers;
 
 import graph.RelationshipTypes;
 
+import java.util.HashMap;
 import java.util.List;
 
 import play.Logger;
@@ -55,4 +56,33 @@ public class SnippetActions extends AbstractController {
 		sourceSnippet.addRelationship(RelationshipTypes.RELATED_SNIPPET, destSnippet);
 		Application.snippet(sourceSnippet.seoName);
 	}
+	
+	
+	public static void addNoteModal(String snippetSeoName) {
+		User user = Security.getLoggedInUser();
+		// We'll need a list of all the snippets that we can write to
+		
+		Snippet snippet = Snippet.findBySeoName(snippetSeoName);
+		if (snippet == null) {
+			renderText("Could not find snippet");
+		}
+		
+		render (user, snippet);
+	}
+
+    public static void addNote(String snippetSeoName, String text) {
+		User user = Security.getLoggedInUser();
+		
+		Snippet snippet = Snippet.findBySeoName(snippetSeoName);
+		if (snippet == null) {
+			Application.snippet(null);
+		}
+
+		HashMap<String, String> attributes = new HashMap<String, String>();
+		attributes.put("text", text);
+		user.addRelationship(RelationshipTypes.NOTE, snippet, attributes);
+		Application.snippet(snippetSeoName);
+
+    }
+
 }

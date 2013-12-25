@@ -81,6 +81,24 @@ public class User extends GraphModel {
 		return tags;
 	}
 	
+	public List<String> accessLevels(Snippet snippet) {
+		List<String> accessLevels = new ArrayList<String>();
+
+		List<Relationship> relationships = getRelationships(Snippet.class, snippet.id);
+		for (Relationship relationship: relationships) {
+			if (relationship.type.equals(RelationshipTypes.AUTHOR)) {
+				accessLevels.add("Author");
+			} else if (relationship.type.equals(RelationshipTypes.READ_ACCESS)) {
+				accessLevels.add("Read");
+			} else if (relationship.type.equals(RelationshipTypes.WRITE_ACCESS)) {
+				accessLevels.add("Write");
+			} else if (relationship.type.equals(RelationshipTypes.DELETE_ACCESS)) {
+				accessLevels.add("Delete");
+			}				
+		}
+		return accessLevels;
+	}
+	
 	@PostUpdate
 	public void postUpdate() {
 		snippets = null;

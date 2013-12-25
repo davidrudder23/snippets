@@ -1,0 +1,23 @@
+#{if "column".equals(_placement)}
+<div class="related-snippet well" id="related-snippet-${_snippet.id}">
+	<h3 id="snippet-name">
+		<a href="@{Application.snippet(_snippet.seoName)}">${_snippet.name}</a>
+	</h3>
+	<p id="snippet-text">${_snippet.text}</p>
+</div>
+#{/if}#{else}
+<div class="snippet" id="snippet">
+	<h3 id="snippet-name">${_snippet.name}</h3>
+	<p id="snippet-text">${_snippet.text}</p>
+	<span style="display: none" id="snippet-id" snippet-id="${_snippet?.id}"></span>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<span class="snippet-tags-label">Tags</span> 
+			#{list items:_snippet.getTags(), as:'tag'} 
+				<span class="badge"><a href="/tag/${tag.name}">${tag.getName()}</a></span> 
+			#{/list}
+			<span class="badge" style="float: right" onclick="showAddTagModal()">Add Tag</span> 
+		</li>
+	</ul>
+</div>
+#{/else}
