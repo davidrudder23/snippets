@@ -9,7 +9,7 @@
 #{/if}#{else}
 <div class="snippet" id="snippet">
 	<a href="@{SnippetActions.deleteSnippet(_snippet.seoName)}" onclick="return (confirm('delete snippet?'))"><i style="float: right" class="fa fa-trash-o"></i></a>
-	<h3 id="snippet-name">${_snippet.name}</h3>
+	<a href="@{Application.snippet(_snippet.seoName)}"><h3 id="snippet-name">${_snippet.name}</h3></a>
 	<p id="snippet-text">${_snippet.text}</p>
 	<span style="display: none" id="snippet-id" snippet-id="${_snippet?.id}"></span>
 	<ul class="list-group">
