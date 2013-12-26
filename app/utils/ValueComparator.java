@@ -5,7 +5,7 @@ import java.util.Map;
 
 import play.Logger;
 
-public class ValueComparator<K, V extends Comparable<V>> implements Comparator<K> {
+public class ValueComparator<K extends Comparable<K>, V extends Comparable<V>> implements Comparator<K> {
 
 	Map<K, V> map;
 
@@ -17,7 +17,7 @@ public class ValueComparator<K, V extends Comparable<V>> implements Comparator<K
 		Integer v1 = (Integer)map.get(o1);
 		Integer v2 = (Integer)map.get(o2);
 		
-		if (v2.compareTo(v1)==0) return ((String)o2).compareTo((String)o1);
+		if (v2.compareTo(v1)==0) return ((K)o2).compareTo((K)o1);
 		return (v2.compareTo(v1));
 	}
 }

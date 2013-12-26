@@ -49,6 +49,29 @@ public abstract class AbstractController extends Controller {
 	    List<String> tagNames = new ArrayList<String> (sortedMap.keySet());
 	    
 		renderArgs.put("tagNames", tagNames);
+		
+		// Find all the snippets, shared with whome
+		HashMap<User, Integer> userNamesAndCounts = new HashMap<User, Integer>();
+		for (Snippet snippet: snippets) {
+			if (snippet != null) {
+				List<User> snippetUsers = snippet.getUsersWithReadAccess();
+				for (User snippetUser: snippetUsers) {
+					Integer userCount = userNamesAndCounts.get(snippetUser.id);
+					if (userCount == null) userCount = new Integer(0);
+					userCount++;
+					userNamesAndCounts.put(snippetUser, userCount);
+				}
+			}
+		}
+		ValueComparator<User, Integer> userComparator = new ValueComparator<User, Integer> (userNamesAndCounts);
+		TreeMap<User, Integer>  userMap = new TreeMap<User, Integer> (userComparator);
+	    
+	    for (User key: userNamesAndCounts.keySet()) {
+	    	userMap.put(key, userNamesAndCounts.get(key));
+	    }
+	    List<User> usersWithReadAccess = new ArrayList<User> (userMap.keySet());
+		renderArgs.put("usersWithReadAccess", usersWithReadAccess);
+
 	}
 }
 

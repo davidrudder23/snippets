@@ -24,8 +24,8 @@ function addSnippet() {
 				</ul>
 				<h2>Shared With</h2>
 				<ul class="nav nav-stacked affix-top" id="sidebar">
-				#{list items:tagNames, as:'tagName'}
-					<li><input type="checkbox" id="tag_${tagName}" />${tagName}</li>
+				#{list items:usersWithReadAccess, as:'userWithReadAccess'}
+					<li><input type="checkbox" id="user_with_read_access_${userWithReadAccess}" />${userWithReadAccess.username}</li>
 				#{/list}
 				</ul>
 			</div>

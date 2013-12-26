@@ -20,7 +20,7 @@ import play.data.validation.Required;
 import play.db.jpa.Model;
 
 @Entity
-public class User extends GraphModel {
+public class User extends GraphModel implements Comparable<User>{
 
 	public String username;
 	
@@ -138,4 +138,11 @@ public class User extends GraphModel {
 		}
 		return null;
 	}
+
+	@Override
+	public int compareTo(User o) {
+		return id.compareTo(o.id);
+	}
+	
+	
 }

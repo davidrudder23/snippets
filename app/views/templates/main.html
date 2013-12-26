@@ -7,8 +7,8 @@
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 		<link rel="stylesheet" href="//getbootstrap.com/examples/starter-template/starter-template.css">
 	    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 		
@@ -18,26 +18,11 @@
 			var $body = $(document.body);
 			var navHeight = $('.navbar').outerHeight(true) + 10;
 
-
-			$('#sidebar').affix({
-			      offset: {
-			        top: function () {
-			            var offsetTop      = $('#sidebar').offset().top
-			            var sideBarMargin  = parseInt($('#sidebar').children(0).css('margin-top'), 10)
-			            var navOuterHeight = $('#masthead').height()
-
-			            return (this.top = offsetTop - navOuterHeight - sideBarMargin)
-			        },
-			        bottom: function () {
-			            return (this.bottom = $('footer').outerHeight(true))
-			        }
-			      }
-			});
-
-			$body.scrollspy({
-				target: '#leftCol',
-				offset: navHeight
-			});
+		
+			$(document).keydown(function(e){
+				if (e.keyCode==27)
+					hideModal();
+				});
 			
 			#{get 'moreOnReady' /}
 		});
@@ -48,14 +33,16 @@
 				url: url,
 				success: function(data) {
 					$("#generic-modal").html(data);
-					$(".generic-modal").show();
+					$(".generic-modal").fadeIn(100);
+					
+					$(".generic-modal :input:not([type=hidden])").first().focus();
 				}
 			});
 
 		}
 		
-		function hideModal(url) {
-			$(".generic-modal").hide();
+		function hideModal() {
+			$(".generic-modal").fadeOut(100);
 		}
 		
 		</script>
