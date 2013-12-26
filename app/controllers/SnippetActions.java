@@ -46,16 +46,13 @@ public class SnippetActions extends AbstractController {
 		Snippet destSnippet = Snippet.find("bySeoname", destSeoName).first();
 		
 		if (sourceSnippet == null) {
-			Logger.debug ("Source snippet is null");
 			Application.snippet(null);
 		}
 		
 		if (destSnippet == null) {
-			Logger.debug ("Dest snippet is null");
 			Application.snippet(sourceSnippet.seoName);
 		}
 		
-		Logger.debug ("Relating %s to %s", sourceSnippet, destSnippet);
 		sourceSnippet.addRelationship(RelationshipTypes.RELATED_SNIPPET, destSnippet);
 		Application.snippet(sourceSnippet.seoName);
 	}
@@ -140,6 +137,16 @@ public class SnippetActions extends AbstractController {
     	Application.snippet(snippet.seoName);
     }
     
+	public static void deleteSnippet(String snippetName) {
+		Snippet snippet = Snippet.findBySeoName(snippetName);
+		if (snippet == null) {
+			Application.index();
+		}
+		
+		snippet.delete();
+		Application.index();
+	}
+	
 	public static void removeTag(String snippetName, String tagName) {
 		Snippet parent = Snippet.findBySeoName(snippetName);
 		if (parent == null) {

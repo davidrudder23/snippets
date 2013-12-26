@@ -54,6 +54,7 @@
 .snippet {
  	width: 90%;
  	display: block; 
+	position: relative; 
  	float: left;	
 }
 

@@ -5,9 +5,8 @@
 # Home page
 GET     /                                       Application.index
 
-GET		/tag/{tagName}							TagController.tag
-
 GET		/snippet/{snippetName}					Application.snippet
+GET		/tag/{tagName}							Application.tag
 
 GET		/login									Security.login
 

@@ -42,6 +42,7 @@ public class Application extends AbstractController {
 
 		if (snippet == null) {
 	    	List<Snippet> mySnippets = user.getSnippets();
+	    	Logger.debug ("Found snippets - %s", mySnippets);
 	    	
 	    	if ((mySnippets != null) && (mySnippets.size()>0)) {
 	    		snippet = mySnippets.get(0);
@@ -115,44 +116,65 @@ public class Application extends AbstractController {
     	snippet(null);
     }
     
-    public static void getMySnippetAjaxJson(Long snippetId) {
+	public static void tag(String tagName) {
+		Tag tag = Tag.find("byName", tagName).first();
+		
+		if (tag == null) Application.index();
+		
+		render(tag);
+	}
+	
+    public static void getNextTag(String currentTagName) {
 		User user = Security.getLoggedInUser();
-    	Snippet snippet = null;
-    	if (snippetId != null) {
-    		snippet = Snippet.findById(snippetId);
+    	Tag tag = null;
+    	if (currentTagName == null) {
+			tag(null);
     	}
+    	List<Tag> myTags = user.getTags();
     	
-    	if (snippet != null) {
-			renderJSON(snippet, snippet.getJsonSerializer());
+    	if ((myTags == null) || (myTags.size()<=1)) {
+			tag(null);
     	}
 
-    	List<Snippet> mySnippets = user.getSnippets();
-    	
-    	if ((mySnippets != null) && (mySnippets.size()>0)) {
-    		snippet = mySnippets.get(0);
-			renderJSON(snippet, snippet.getJsonSerializer());
+    	boolean foundIt = false;
+    	for (Tag myTag: myTags) {
+    		if (myTag.name.equals(currentTagName)) {
+    			foundIt = true;
+    		} else if (foundIt) {
+    			tag = myTag;
+    			tag(tag.name);
+    		}
     	}
-
-		renderText("Add a snippet");
+    	
+    	if (foundIt) {
+			tag = myTags.get(0);
+			tag(tag.name);
+    	}
+    	tag(null);
+    	
     }
     
-
-    public static void removeTagAjaxUpdate(Long tagId, Long snippetId) {
-    	if (tagId == null) {
-    		renderText("Can not find tag");
+    public static void getPrevTag(String tagName) {
+		User user = Security.getLoggedInUser();
+    	Tag tag = null;
+    	if (tagName == null) {
+        	tag(null);
     	}
+    	List<Tag> myTags = user.getTags();
     	
+    	if ((myTags == null) || (myTags.size()<=1)) {
+        	tag(null);
+    	}
+
+    	tag = myTags.get(myTags.size()-1);
     	
-    }
-    
-    public static void addTagAjaxUpdate(String name) {
-    	User user = Security.getLoggedInUser();
-    	Tag tag = new Tag();
-    	tag.name = name;
-    	tag.addRelationship(RelationshipTypes.AUTHOR, user);
-    	tag.save();
-    	
-    	renderText("Tag %s added", name);
+    	for (Tag myTag: myTags) {
+    		if (myTag.name.equals(tagName)) {
+    			tag(tag.name);
+    		}
+    		tag = myTag;
+    	}
+    	tag(null);
     }
     
     public static void getMyTagsAjaxJson() {

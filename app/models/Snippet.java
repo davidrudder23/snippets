@@ -7,12 +7,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PreDestroy;
 import javax.persistence.Entity;
 import javax.persistence.PostLoad;
 import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.OnDelete;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -142,6 +146,11 @@ public class Snippet extends GraphModel {
 			fixSeoName();
 			save();
 		}
+	}
+	
+	@PreRemove
+	public void preRemoveHandler() {
+		Relationship.delete("(destinationClass=? and destinationId=?) or (sourceClass=? and sourceId=?)", Snippet.class.getName(), id, Snippet.class.getName(), id);
 	}
 	
 	@PostUpdate

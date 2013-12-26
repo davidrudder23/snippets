@@ -1,0 +1,73 @@
+#{extends 'templates/sidebar.html' /}
+#{set title:'Snippets' /}
+
+#{set 'moreScripts'}
+<script src="/public/javascripts/typeahead.js"></script>
+
+<script>
+$().ready(function() {
+});
+
+
+
+</script>
+#{/set}
+
+#{set 'moreOnReady'}
+
+#{/set}
+
+	<div class="well" style="width: 800px">
+	<h1>Snippets tagged with &quot;${tag.name}&quot;</h1>
+	</div>
+	<div class="well" style="width: 800px">
+
+		#{list items:tag.getSnippets(), as:'snippet'}
+			#{snippet snippet:snippet, placement:"main"/}	
+		#{/list}
+
+	</div>
+	
+	
+
+	
+	
+	
+	
+<!-- Add Tag Modal -->
+<div class="modal fade" id="addTagModal" snippetId="" tabindex="-1" role="dialog" aria-labelledby="addTagModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add a Tag</h4>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="typeahead" name="addTagInput" id="addTagInput"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="tagSnippet()">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Add Snippet Modal -->
+<div class="modal fade" id="addTagModal" snippetId="" tabindex="-1" role="dialog" aria-labelledby="addTagModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add a Tag</h4>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="typeahead" name="addTagInput" id="addTagInput"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="tagSnippet()">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

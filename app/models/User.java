@@ -117,7 +117,6 @@ public class User extends GraphModel {
 			Logger.debug ("Users is null");
 			return null;
 		}
-		Logger.debug ("Found %d users", users.size());
 		if (users.size()<=0) return null;
 		
 		return users.get(0);
@@ -129,7 +128,6 @@ public class User extends GraphModel {
 			Logger.debug ("Users is null");
 			return null;
 		}
-		Logger.debug ("Found %d users", users.size());
 		if (users.size()<=0) return null;
 		
 		for (User user: users) {

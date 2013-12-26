@@ -70,7 +70,6 @@ public abstract class GraphModel extends Model {
 	 */
 	public List<Relationship> getRelationships(Class targetClass, Long targetId) {
 		String thisClassName = getClass().getName();
-		Logger.debug ("Getting relationships for destinationClass=%s and destinationId=%s and sourceClass=%s and sourceId=%s", thisClassName, id, targetClass.getName(), targetId);
 		List<Relationship> relationships = Relationship.find("(destinationClass=? and destinationId=? and sourceClass=? and sourceId=?) OR (sourceClass=? and sourceId=? and destinationClass=? and destinationId=?)", 
 				thisClassName, id, targetClass.getName(), targetId,
 				thisClassName, id, targetClass.getName(), targetId).fetch();

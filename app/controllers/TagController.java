@@ -12,11 +12,5 @@ public class TagController extends Controller {
 		if (user==null) Security.login();
 	}
 
-	public static void tag(String tagName) {
-		Tag tag = Tag.find("byName", tagName).first();
-		
-		if (tag == null) Application.index();
-		
-		render(tag);
-	}
+
 }

@@ -8,6 +8,7 @@
 </div>
 #{/if}#{else}
 <div class="snippet" id="snippet">
+	<a href="@{SnippetActions.deleteSnippet(_snippet.seoName)}" onclick="return (confirm('delete snippet?'))"><i style="float: right" class="fa fa-trash-o"></i></a>
 	<h3 id="snippet-name">${_snippet.name}</h3>
 	<p id="snippet-text">${_snippet.text}</p>
 	<span style="display: none" id="snippet-id" snippet-id="${_snippet?.id}"></span>
@@ -20,7 +21,7 @@
 					<a href="@{SnippetActions.removeTag(_snippet.seoName, tag.name)}">
 						<i style="float: right" class="fa fa-unlink"></i>
 					</a>
-					<a href="/tag/${tag.name}">${tag.getName()}</a>
+					<a href="@{Application.tag(tag.name)}">${tag.getName()}</a>
 				</span> 
 			#{/list}
 		</li>

@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 
 import graph.GraphModel;
@@ -15,5 +17,10 @@ public class Tag extends GraphModel {
 	 */
 	public int numberTagged() {
 		return getRelations(RelationshipTypes.TAGGED, Snippet.class).size();
+	}
+	
+	public List<Snippet> getSnippets() {
+		List<Snippet> snippets = (List<Snippet>)getRelations(RelationshipTypes.TAGGED, Snippet.class);
+		return snippets;
 	}
 }

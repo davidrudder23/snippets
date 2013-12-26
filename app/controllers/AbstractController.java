@@ -27,33 +27,27 @@ public abstract class AbstractController extends Controller {
 
 		HashMap<String, Integer> tagNamesAndCounts = new HashMap<String, Integer>();
 		for (Snippet snippet: snippets) {
-			List<Tag> snippetTags = snippet.getTags();
-			for (Tag snippetTag: snippetTags) {
-				String tagName = snippetTag.name;
-				Integer tagCount = tagNamesAndCounts.get(tagName);
-				if (tagCount == null) tagCount = new Integer(0);
-				tagCount++;
-				tagNamesAndCounts.put(tagName, tagCount);
-			} 
+			if (snippet != null) {
+				List<Tag> snippetTags = snippet.getTags();
+				for (Tag snippetTag: snippetTags) {
+					String tagName = snippetTag.name;
+					Integer tagCount = tagNamesAndCounts.get(tagName);
+					if (tagCount == null) tagCount = new Integer(0);
+					tagCount++;
+					tagNamesAndCounts.put(tagName, tagCount);
+				}
+			}
 		}
 		
-		Logger.debug ("%s", tagNamesAndCounts);
 	    ValueComparator<String, Integer> comparator = new ValueComparator<String, Integer> (tagNamesAndCounts);
 	    TreeMap<String, Integer> sortedMap = new TreeMap<String, Integer> (comparator);
 	    
 	    for (String key: tagNamesAndCounts.keySet()) {
-	    	Logger.debug ("Adding key %s with value %s", key, tagNamesAndCounts.get(key));
 	    	sortedMap.put(key, tagNamesAndCounts.get(key));
 	    }
 	    //sortedMap.putAll(tagNamesAndCounts);
-		Logger.debug ("%s", sortedMap);
 	    List<String> tagNames = new ArrayList<String> (sortedMap.keySet());
 	    
-	    Logger.debug ("Tag names:");
-	    for (String tagName: tagNames) {
-	    	Logger.debug("  %s", tagName);
-	    }
-
 		renderArgs.put("tagNames", tagNames);
 	}
 }
